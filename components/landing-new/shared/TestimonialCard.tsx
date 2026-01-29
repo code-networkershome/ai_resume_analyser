@@ -25,7 +25,7 @@ export function TestimonialCard({
           <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center border border-blue-100 mb-4 transition-transform group-hover:rotate-12">
             <Quote className="w-5 h-5 text-blue-500 fill-blue-500" />
           </div>
-          <p className="text-slate-700 text-sm leading-relaxed font-medium italic">"{quote}"</p>
+          <p className="text-slate-700 text-sm leading-relaxed font-medium italic">&quot;{quote}&quot;</p>
         </div>
 
         <div className="mt-auto pt-6 border-t border-slate-50 flex items-center justify-between gap-4">

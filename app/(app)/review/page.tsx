@@ -263,7 +263,7 @@ export default function ReviewPage() {
                                                         Increases precision by <span className="text-blue-600 font-bold">40%</span>.
                                                     </p>
                                                     <p className="text-[10px] text-blue-700/70 leading-tight">
-                                                        We'll prioritize skills found in the JD.
+                                                        We&apos;ll prioritize skills found in the JD.
                                                     </p>
                                                 </div>
                                             </div>
