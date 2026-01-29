@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
+import Image from "next/image";
+
 
 const darkImages = [
     "/assets/hero_1_dark.png",
@@ -62,9 +64,11 @@ export function ReportSlider() {
                                 }}
                                 className="absolute inset-8"
                             >
-                                <img
+                                <Image
                                     src={src}
                                     alt="Analysis Preview"
+                                    width={800}
+                                    height={600}
                                     className="w-full h-full object-contain rounded-2xl shadow-xl transition-transform duration-700 group-hover:scale-[1.02]"
                                 />
                             </motion.div>

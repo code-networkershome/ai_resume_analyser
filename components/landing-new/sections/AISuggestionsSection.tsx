@@ -100,24 +100,24 @@ export function AISuggestionsSection() {
                 <span className="text-micro text-text-secondary mb-4 block">Preview</span>
                 <div className="space-y-4">
                   <div className="bg-white rounded-xl p-4 shadow-sm">
-                    <p className="text-sm text-text-secondary line-through">"Led a team..."</p>
+                    <p className="text-sm text-text-secondary line-through">{"\""}Led a team...{"\""}</p>
                     <div className="flex items-center gap-2 mt-2">
                       <Sparkles className="w-4 h-4 text-accent-blue" />
-                      <p className="text-sm text-text-primary">"Led a team of 6 engineers to deliver..."</p>
+                      <p className="text-sm text-text-primary">{"\""}Led a team of 6 engineers to deliver...{"\""}</p>
                     </div>
                   </div>
                   <div className="bg-white rounded-xl p-4 shadow-sm">
-                    <p className="text-sm text-text-secondary line-through">"Improved performance..."</p>
+                    <p className="text-sm text-text-secondary line-through">{"\""}Improved performance...{"\""}</p>
                     <div className="flex items-center gap-2 mt-2">
                       <Sparkles className="w-4 h-4 text-accent-blue" />
-                      <p className="text-sm text-text-primary">"Cut API latency by 34% through..."</p>
+                      <p className="text-sm text-text-primary">{"\""}Cut API latency by 34% through...{"\""}</p>
                     </div>
                   </div>
                   <div className="bg-white rounded-xl p-4 shadow-sm">
-                    <p className="text-sm text-text-secondary line-through">"Responsible for coding..."</p>
+                    <p className="text-sm text-text-secondary line-through">{"\""}Responsible for coding...{"\""}</p>
                     <div className="flex items-center gap-2 mt-2">
                       <Sparkles className="w-4 h-4 text-accent-blue" />
-                      <p className="text-sm text-text-primary">"Shipped 12 features in 6 months..."</p>
+                      <p className="text-sm text-text-primary">{"\""}Shipped 12 features in 6 months...{"\""}</p>
                     </div>
                   </div>
                 </div>
