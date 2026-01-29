@@ -1,0 +1,165 @@
+// ===========================================
+// PRISMA SCHEMA - ResumeAI
+// ===========================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+// ===========================================
+// AUTHENTICATION MODELS (NextAuth)
+// ===========================================
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ===========================================
+// APPLICATION MODELS
+// ===========================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  password      String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  accounts Account[]
+  sessions Session[]
+  resumes  Resume[]
+  usage    Usage?
+
+  @@map("users")
+}
+
+model Resume {
+  id           String   @id @default(cuid())
+  userId       String?  @map("user_id")
+  rawText      String   @db.Text
+  wordCount    Int      @default(0) @map("word_count")
+  detectedRole String?  @map("detected_role")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  reviews Review[]
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("resumes")
+}
+
+model Review {
+  id               String   @id @default(cuid())
+  resumeId         String   @map("resume_id")
+  targetRole       String   @map("target_role")
+  experienceLevel  String   @map("experience_level")
+  atsScore         Int      @map("ats_score")
+  structuralIssues Json     @default("[]") @map("structural_issues")
+  contentIssues    Json     @default("[]") @map("content_issues")
+  aiCritique       Json?    @map("ai_critique")
+  skillGaps        Json?    @map("skill_gaps")
+  finalVerdict     String   @db.Text @map("final_verdict")
+  processingTimeMs Int?     @map("processing_time_ms")
+  atsBreakdown     Json?    @map("ats_breakdown")
+  responsibilityAnalysis Json? @map("responsibility_analysis")
+  recommendations  Json?    @map("recommendations")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@index([resumeId])
+  @@index([targetRole])
+  @@index([createdAt])
+  @@map("reviews")
+}
+
+model Usage {
+  id          String   @id @default(cuid())
+  userId      String   @unique @map("user_id")
+  reviewCount Int      @default(0) @map("review_count")
+  lastReview  DateTime? @map("last_review")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("usage")
+}
+
+// ===========================================
+// BLOG MODELS (Optional - for dynamic blog)
+// ===========================================
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String   @db.Text
+  content     String   @db.Text
+  coverImage  String?  @map("cover_image")
+  author      String
+  category    String
+  tags        String[] @default([])
+  published   Boolean  @default(false)
+  publishedAt DateTime? @map("published_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([slug])
+  @@index([category])
+  @@index([published])
+  @@map("blog_posts")
+}
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  confirmed Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("subscribers")
+}

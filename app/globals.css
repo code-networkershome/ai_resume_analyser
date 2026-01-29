@@ -1,0 +1,213 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ResumeAI New Design System - Light Blue Theme */
+    --background: 210 50% 98%;
+    --foreground: 220 20% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 10%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 220 20% 10%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 217 91% 60%;
+    --radius: 0.75rem;
+
+    /* Custom tokens */
+    --bg-primary: #F0F7FF;
+    --bg-secondary: #FFFFFF;
+    --accent-blue: #3B82F6;
+    --accent-light: #DBEAFE;
+    --text-primary: #1E293B;
+    --text-secondary: #64748B;
+    --text-inverse: #FFFFFF;
+    --card-light: #FFFFFF;
+    --gradient-start: #F0F7FF;
+    --gradient-end: #FFFFFF;
+
+    /* Typography */
+    --font-display: var(--font-inter), system-ui, sans-serif;
+    --font-body: var(--font-inter), system-ui, sans-serif;
+    --font-mono: ui-monospace, monospace;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: linear-gradient(180deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+}
+
+@layer components {
+  .text-h1 {
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  .text-h2 {
+    font-size: clamp(28px, 3.5vw, 42px);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .text-h3 {
+    font-size: clamp(22px, 2.5vw, 32px);
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .text-body {
+    font-size: clamp(15px, 1.1vw, 17px);
+    line-height: 1.6;
+  }
+
+  .text-micro {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Highlight text style */
+  .text-highlight {
+    background: linear-gradient(180deg, transparent 60%, var(--accent-light) 60%);
+    padding: 0 4px;
+  }
+
+  /* Card styles */
+  .card-light {
+    background: var(--card-light);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(59, 130, 246, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+  }
+
+  /* Button hover animation */
+  .btn-hover {
+    transition: all 0.2s ease;
+  }
+
+  .btn-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+  }
+
+  .btn-hover:active {
+    transform: scale(0.98);
+  }
+
+  /* Card hover */
+  .card-hover {
+    transition: all 0.3s ease;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(59, 130, 246, 0.12);
+  }
+
+  /* Section styling */
+  .section-padding {
+    @apply py-16 lg:py-24 px-6 lg:px-12;
+  }
+
+  /* Badge styling */
+  .badge-trust {
+    @apply inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full text-sm font-medium shadow-sm border border-blue-100;
+  }
+
+  .bg-gradient-mesh {
+    background-color: #ffffff;
+    background-image: radial-gradient(at 0% 0%, hsla(220, 80%, 90%, 1) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(210, 80%, 95%, 1) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsla(220, 80%, 98%, 1) 0px, transparent 50%);
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
