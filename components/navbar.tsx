@@ -8,45 +8,45 @@ export async function Navbar() {
     const session = await auth();
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200/60 bg-white/80 backdrop-blur-md">
-            <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-                <div className="flex items-center gap-8">
-                    <Link href="/" className="flex items-center gap-2 group">
-                        <div className="h-10 w-10 rounded-2xl bg-primary flex items-center justify-center shadow-xl shadow-primary/20 transition-transform group-hover:scale-105 group-hover:rotate-3">
-                            <FileText className="h-5 w-5 text-white" />
+        <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/20 bg-white/70 backdrop-blur-xl">
+            <div className="container mx-auto px-4 h-20 flex items-center justify-between">
+                <div className="flex items-center gap-12">
+                    <Link href="/" className="flex items-center gap-3 group">
+                        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-xl shadow-blue-500/20 transition-all group-hover:scale-110 group-hover:rotate-6">
+                            <FileText className="h-6 w-6 text-white" />
                         </div>
-                        <span className="font-black text-2xl tracking-tighter text-slate-900">ResumeAI</span>
+                        <span className="font-bold text-2xl tracking-tight text-slate-900 font-display">ResumeAI</span>
                     </Link>
 
-                    <nav className="hidden lg:flex items-center gap-8">
-                        <Link href="#methodology" className="text-xs font-black uppercase tracking-widest text-slate-400 hover:text-primary transition-colors">Methodology</Link>
-                        <Link href="#audit" className="text-xs font-black uppercase tracking-widest text-slate-400 hover:text-primary transition-colors">Audit</Link>
-                        <Link href="#ai-rewrite" className="text-xs font-black uppercase tracking-widest text-slate-400 hover:text-primary transition-colors">AI Rewrite</Link>
+                    <nav className="hidden lg:flex items-center gap-10">
+                        <Link href="#methodology" className="text-sm font-semibold text-slate-500 hover:text-blue-600 transition-all hover:translate-y-[-1px]">Methodology</Link>
+                        <Link href="#audit" className="text-sm font-semibold text-slate-500 hover:text-blue-600 transition-all hover:translate-y-[-1px]">Audit</Link>
+                        <Link href="#ai-rewrite" className="text-sm font-semibold text-slate-500 hover:text-blue-600 transition-all hover:translate-y-[-1px]">AI Rewrite</Link>
                     </nav>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                     {session?.user ? (
-                        <div className="flex items-center gap-3">
-                            <Button asChild variant="ghost" size="sm" className="font-bold text-slate-600">
+                        <div className="flex items-center gap-4">
+                            <Button asChild variant="ghost" className="font-bold text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl">
                                 <Link href="/dashboard">
                                     <LayoutDashboard className="w-4 h-4 mr-2" />
                                     Dashboard
                                 </Link>
                             </Button>
                             <form action={handleSignOut}>
-                                <Button variant="ghost" size="sm" className="font-bold text-red-500 hover:text-red-600 hover:bg-red-50">
+                                <Button variant="ghost" className="font-bold text-red-500 hover:text-red-600 hover:bg-red-50 rounded-xl">
                                     <LogOut className="w-4 h-4 mr-2" />
                                     Sign Out
                                 </Button>
                             </form>
                         </div>
                     ) : (
-                        <div className="flex items-center gap-2">
-                            <Button asChild variant="ghost" size="sm" className="font-bold text-slate-600">
-                                <Link href="/signin">Log in</Link>
-                            </Button>
-                            <Button asChild size="sm" className="rounded-full px-5 font-bold bg-primary hover:bg-primary/90 shadow-md shadow-primary/10">
+                        <div className="flex items-center gap-3">
+                            <Link href="/signin" className="text-sm font-bold text-slate-600 hover:text-blue-600 px-4 py-2 transition-all">
+                                Log in
+                            </Link>
+                            <Button asChild className="btn-primary rounded-xl px-6 h-11 font-bold shadow-lg shadow-blue-500/20">
                                 <Link href="/review">Get Started</Link>
                             </Button>
                         </div>

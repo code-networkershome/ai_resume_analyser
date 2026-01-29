@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.0.0",
+    "@gsap/react": "^2.1.2",
     "@prisma/client": "^5.10.0",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-avatar": "^1.1.11",
@@ -50,6 +51,7 @@
     "recharts": "^3.7.0",
     "sonner": "^1.4.0",
     "tailwind-merge": "^2.2.1",
+    "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.4"
   },
   "devDependencies": {

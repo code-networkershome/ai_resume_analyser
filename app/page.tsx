@@ -7,14 +7,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Navigation } from '@/components/landing-new/navigation';
 import { HeroSection } from '@/components/landing-new/sections/HeroSection';
 import { ATSScoreSection } from '@/components/landing-new/sections/ATSScoreSection';
-import { KeywordMatchSection } from '@/components/landing-new/sections/KeywordMatchSection';
-import { ContentEnhancementSection } from '@/components/landing-new/sections/ContentEnhancementSection';
-import { SkillGapSection } from '@/components/landing-new/sections/SkillGapSection';
+import { FeaturesSection } from '@/components/landing-new/sections/FeaturesSection';
+import { AnalysisSuiteSection } from '@/components/landing-new/sections/AnalysisSuiteSection';
 import { AIEngineSection } from '@/components/landing-new/sections/AIEngineSection';
-import { AISuggestionsSection } from '@/components/landing-new/sections/AISuggestionsSection';
-import { JobOptimizationSection } from '@/components/landing-new/sections/JobOptimizationSection';
 import { TestimonialsSection } from '@/components/landing-new/sections/TestimonialsSection';
 import { FinalCTASection } from '@/components/landing-new/sections/FinalCTASection';
+import { Footer } from '@/components/landing-new/footer';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -27,23 +25,23 @@ export default function Home() {
     }, []);
 
     return (
-        <div className="relative min-h-screen bg-gradient-to-b from-[#F0F7FF] to-white">
+        <div className="relative min-h-screen bg-gradient-to-b from-[#F8FAFF] via-white to-slate-50">
             {/* Navigation */}
             <Navigation />
 
             {/* Main Content - Continuous Scrolling */}
             <main className="relative">
                 <HeroSection />
+                <FeaturesSection />
                 <ATSScoreSection />
-                <KeywordMatchSection />
-                <ContentEnhancementSection />
-                <SkillGapSection />
+                <AnalysisSuiteSection />
                 <AIEngineSection />
-                <AISuggestionsSection />
-                <JobOptimizationSection />
                 <TestimonialsSection />
                 <FinalCTASection />
             </main>
+
+            {/* Footer */}
+            <Footer />
         </div>
     );
 }

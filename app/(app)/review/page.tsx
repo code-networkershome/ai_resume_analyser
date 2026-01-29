@@ -19,6 +19,7 @@ import {
     Target
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AuroraBackground } from "@/components/shared/AuroraBackground";
 
 export default function ReviewPage() {
     const router = useRouter();
@@ -105,212 +106,226 @@ export default function ReviewPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-[#F0F7FF] to-white py-12 px-6">
-            <div className="max-w-7xl mx-auto space-y-12">
+        <AuroraBackground className="py-12 px-6">
+            <div className="max-w-7xl mx-auto space-y-12 relative z-10">
                 <div className="text-center space-y-4">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent-light rounded-full mb-4 shadow-sm shadow-blue-500/5">
-                        <span className="w-2 h-2 bg-accent-blue rounded-full animate-pulse"></span>
-                        <span className="text-xs font-bold text-accent-blue uppercase tracking-widest">AI Analyst</span>
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-100 rounded-full mb-4 shadow-sm">
+                        <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
+                        <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">AI Analyst</span>
                     </div>
-                    <h1 className="text-4xl md:text-5xl font-black tracking-tight text-text-primary">
-                        Scan <span className="text-accent-blue">Resume</span>
+                    <h1 className="text-4xl md:text-6xl font-black tracking-tight text-slate-900 font-display">
+                        Scan Your Resume
                     </h1>
-                    <p className="text-lg text-text-secondary max-w-2xl mx-auto font-medium">Upload your resume and define your target role for a detailed AI-driven breakdown.</p>
+                    <p className="text-lg text-slate-500 max-w-2xl mx-auto font-medium leading-relaxed">
+                        Upload your profile and define your target role for a detailed AI-driven breakdown.
+                    </p>
                 </div>
 
                 <div className="space-y-8">
-                    <Card className="shadow-2xl shadow-blue-500/10 border-none bg-white/80 backdrop-blur-xl overflow-hidden rounded-[2.5rem]">
-                        <form onSubmit={onSubmit}>
-                            <CardHeader className="bg-white/50 border-b border-gray-50/50 p-8 md:p-10">
-                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                                    <div className="space-y-1">
-                                        <CardTitle className="text-2xl font-black text-text-primary flex items-center gap-3">
-                                            <div className="h-10 w-10 bg-accent-blue/10 rounded-xl flex items-center justify-center">
-                                                <FileText className="w-5 h-5 text-accent-blue" />
+                    <div className="relative">
+                        <div className="absolute inset-0 bg-blue-600/5 blur-3xl rounded-[3rem] transform -rotate-1 opacity-50 pointer-events-none" />
+                        <div className="bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-2xl shadow-blue-900/5 relative z-10 transition-shadow hover:shadow-blue-900/10">
+                            <form onSubmit={onSubmit}>
+                                <div className="bg-slate-50/50 border-b border-slate-100 p-8">
+                                    <div className="max-w-4xl mx-auto">
+                                        {/* Compact Header Inputs */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                                            <div className="space-y-1">
+                                                <h2 className="text-xl font-black text-slate-900 font-display">Configuration</h2>
+                                                <p className="text-sm text-slate-500 font-medium">Analysis settings</p>
                                             </div>
-                                            Configuration
-                                        </CardTitle>
-                                        <CardDescription className="font-medium ml-13 italic">Provide context for the AI analyst to tailor your results.</CardDescription>
-                                    </div>
-                                    <div className="flex flex-col md:flex-row gap-4 flex-1 max-w-2xl">
-                                        <div className="flex-1 space-y-2">
-                                            <Label htmlFor="targetRole" className="text-[10px] font-black text-text-secondary uppercase tracking-[0.2em] ml-1">Target Role</Label>
-                                            <select
-                                                id="targetRole"
-                                                className="flex h-12 w-full rounded-2xl border border-blue-50 bg-blue-50/30 px-4 py-2 text-sm font-bold text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-blue/20 transition-all appearance-none cursor-pointer"
-                                                value={formData.targetRole}
-                                                onChange={(e) => setFormData(prev => ({ ...prev, targetRole: e.target.value }))}
-                                            >
-                                                <option value="">Select Role</option>
-                                                {SUPPORTED_ROLES.map((role) => (
-                                                    <option key={role} value={role}>{role}</option>
-                                                ))}
-                                                <option value="Other">Other</option>
-                                            </select>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="space-y-1">
+                                                    <Label htmlFor="targetRole" className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Target Role</Label>
+                                                    <select
+                                                        id="targetRole"
+                                                        className="flex h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 shadow-sm transition-all cursor-pointer"
+                                                        value={formData.targetRole}
+                                                        onChange={(e) => setFormData(prev => ({ ...prev, targetRole: e.target.value }))}
+                                                    >
+                                                        <option value="">Select Role</option>
+                                                        {SUPPORTED_ROLES.map((role) => (
+                                                            <option key={role} value={role}>{role}</option>
+                                                        ))}
+                                                        <option value="Other">Other</option>
+                                                    </select>
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <Label htmlFor="experienceLevel" className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">Experience</Label>
+                                                    <select
+                                                        id="experienceLevel"
+                                                        className="flex h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 shadow-sm transition-all cursor-pointer"
+                                                        value={formData.experienceLevel}
+                                                        onChange={(e) => setFormData(prev => ({ ...prev, experienceLevel: e.target.value }))}
+                                                    >
+                                                        <option value="">Select Level</option>
+                                                        {EXPERIENCE_LEVELS.map((level) => (
+                                                            <option key={level.value} value={level.value}>{level.label}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="flex-1 space-y-2">
-                                            <Label htmlFor="experienceLevel" className="text-[10px] font-black text-text-secondary uppercase tracking-[0.2em] ml-1">Experience Level</Label>
-                                            <select
-                                                id="experienceLevel"
-                                                className="flex h-12 w-full rounded-2xl border border-blue-50 bg-blue-50/30 px-4 py-2 text-sm font-bold text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-blue/20 transition-all appearance-none cursor-pointer"
-                                                value={formData.experienceLevel}
-                                                onChange={(e) => setFormData(prev => ({ ...prev, experienceLevel: e.target.value }))}
-                                            >
-                                                <option value="">Select Level</option>
-                                                {EXPERIENCE_LEVELS.map((level) => (
-                                                    <option key={level.value} value={level.value}>{level.label}</option>
-                                                ))}
-                                            </select>
-                                        </div>
+
+                                        {formData.targetRole === "Other" && (
+                                            <div className="mt-4 animate-in fade-in zoom-in-95 duration-300">
+                                                <input
+                                                    type="text"
+                                                    className="flex h-10 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm font-bold text-slate-900 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 shadow-sm"
+                                                    placeholder="Enter specific job title..."
+                                                    value={formData.jobTitle}
+                                                    onChange={(e) => setFormData(prev => ({ ...prev, jobTitle: e.target.value }))}
+                                                />
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
-                                {formData.targetRole === "Other" && (
-                                    <div className="mt-6 animate-in fade-in zoom-in-95 duration-300">
-                                        <input
-                                            type="text"
-                                            className="flex h-12 w-full rounded-2xl border border-blue-100 bg-white px-6 py-2 text-sm font-bold transition-all focus:outline-none focus:ring-2 focus:ring-accent-blue/20"
-                                            placeholder="Enter your specific job title (e.g. Lead Product Designer)"
-                                            value={formData.jobTitle}
-                                            onChange={(e) => setFormData(prev => ({ ...prev, jobTitle: e.target.value }))}
-                                        />
-                                    </div>
-                                )}
-                            </CardHeader>
-                            <CardContent className="p-8 md:p-10">
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                                    <div className="space-y-6">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <Label className="text-xs font-black text-text-secondary uppercase tracking-[0.2em]">Resume Content</Label>
-                                            <span className="text-[10px] bg-accent-blue text-white px-2 py-0.5 rounded-md font-bold">REQUIRED</span>
-                                        </div>
 
-                                        <div className={cn(
-                                            "border-4 border-dashed rounded-[2rem] p-10 transition-all relative group h-48 flex items-center justify-center",
-                                            fileName ? "border-green-200 bg-green-50/20" : "border-blue-50 bg-blue-50/10 hover:bg-blue-50/30 hover:border-accent-blue/20"
-                                        )}>
-                                            <input
-                                                type="file"
-                                                accept=".pdf,.docx"
-                                                onChange={handleFileChange}
-                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                                            />
-                                            <div className="flex flex-col items-center gap-4">
-                                                <div className={cn(
-                                                    "h-16 w-16 rounded-3xl flex items-center justify-center transition-all duration-500 group-hover:rotate-6 shadow-xl",
-                                                    fileName ? "bg-green-500 text-white shadow-green-500/20" : "bg-white text-accent-blue shadow-blue-500/10"
-                                                )}>
-                                                    {isLoading ? <Loader2 className="h-8 w-8 animate-spin" /> : (fileName ? <CheckCircle2 className="h-8 w-8" /> : <Upload className="h-8 w-8" />)}
+                                <div className="p-8 max-w-6xl mx-auto">
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                                        {/* Left Column: Resume Section */}
+                                        <div className="space-y-4">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="h-8 w-8 rounded-lg bg-blue-50 flex items-center justify-center border border-blue-100 text-blue-600">
+                                                        <FileText className="h-4 w-4" />
+                                                    </div>
+                                                    <Label className="text-sm font-bold text-slate-900">Resume Content</Label>
                                                 </div>
-                                                <div className="text-center">
-                                                    <p className="font-bold text-text-primary text-sm tracking-tight">{fileName || "Drop your profile here"}</p>
-                                                    <p className="text-[10px] text-text-secondary font-medium uppercase tracking-widest mt-1">PDF or DOCX • Max 5MB</p>
+                                                <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">REQUIRED</span>
+                                            </div>
+
+                                            <div className={cn(
+                                                "border-2 border-dashed rounded-[1.5rem] p-6 transition-all relative group h-40 flex items-center justify-center overflow-hidden",
+                                                fileName ? "border-emerald-200 bg-emerald-50/20" : "border-slate-200 bg-slate-50/30 hover:bg-white hover:border-blue-500/30 hover:shadow-xl hover:shadow-blue-500/5"
+                                            )}>
+                                                <input
+                                                    type="file"
+                                                    accept=".pdf,.docx"
+                                                    onChange={handleFileChange}
+                                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                                />
+                                                <div className="flex flex-col items-center gap-2">
+                                                    <div className={cn(
+                                                        "h-10 w-10 rounded-xl flex items-center justify-center transition-all duration-300 shadow-sm",
+                                                        fileName ? "bg-emerald-500 text-white shadow-emerald-500/20" : "bg-white text-blue-600 shadow-blue-500/5 border border-slate-100"
+                                                    )}>
+                                                        {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : (fileName ? <CheckCircle2 className="h-5 w-5" /> : <Upload className="h-5 w-5" />)}
+                                                    </div>
+                                                    <div className="text-center">
+                                                        <p className="font-bold text-slate-900 text-xs">{fileName || "Drop your profile or click to upload"}</p>
+                                                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">PDF or DOCX • Max 5MB</p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div className="space-y-3">
                                             <div className="relative">
+                                                <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                                                    <div className="w-full border-t border-slate-100"></div>
+                                                </div>
+                                                <div className="relative flex justify-center">
+                                                    <span className="bg-white px-2 text-[10px] font-medium text-slate-400 uppercase tracking-wider">Or paste text</span>
+                                                </div>
+                                            </div>
+
+                                            <div className="relative overflow-hidden rounded-xl border border-slate-200 shadow-sm group focus-within:ring-2 focus-within:ring-blue-500/5 focus-within:border-blue-400 transition-all">
                                                 <Textarea
-                                                    placeholder="...or paste raw resume text here"
-                                                    className="min-h-[300px] rounded-[2rem] border-blue-50 bg-gray-50/30 p-8 font-mono text-[11px] leading-relaxed focus:ring-4 focus:ring-accent-blue/10 focus:border-accent-blue/30 transition-all shadow-inner"
+                                                    placeholder="Paste raw resume text here if you don't have a file..."
+                                                    className="min-h-[140px] border-none bg-white p-4 font-jakarta text-xs font-medium leading-relaxed focus:ring-0 resize-y"
                                                     value={formData.resumeText}
                                                     onChange={(e) => setFormData(prev => ({ ...prev, resumeText: e.target.value }))}
                                                 />
-                                                {!formData.resumeText && (
-                                                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
-                                                        <FileText className="w-20 h-20 text-accent-blue" />
-                                                    </div>
-                                                )}
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div className="space-y-6">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <Label className="text-xs font-black text-text-secondary uppercase tracking-[0.2em]">Job Description</Label>
-                                            <span className="text-[10px] bg-gray-100 text-text-secondary px-2 py-0.5 rounded-md font-bold">OPTIONAL</span>
-                                        </div>
-
-                                        <div className="p-6 bg-accent-blue rounded-[2.5rem] text-white relative overflow-hidden group mb-8">
-                                            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-700">
-                                                <Zap className="h-24 w-24" />
-                                            </div>
-                                            <div className="relative z-10 space-y-4">
+                                        {/* Right Column: Job Description Section */}
+                                        <div className="space-y-4">
+                                            <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-2">
-                                                    <div className="h-8 w-8 bg-white/20 rounded-lg flex items-center justify-center">
-                                                        <Zap className="h-4 w-4" />
+                                                    <div className="h-8 w-8 rounded-lg bg-indigo-50 flex items-center justify-center border border-indigo-100 text-indigo-600">
+                                                        <Target className="h-4 w-4" />
                                                     </div>
-                                                    <h4 className="font-black italic text-base">Match Analysis Boost</h4>
+                                                    <Label className="text-sm font-bold text-slate-900">Job Description</Label>
                                                 </div>
-                                                <p className="text-blue-50 text-[11px] font-bold leading-relaxed uppercase tracking-wider">
-                                                    Pasting the specific job description increases ATS scoring precision by 40%
-                                                </p>
+                                                <div className="px-2 py-0.5 rounded-full bg-blue-50 border border-blue-100 flex items-center gap-1">
+                                                    <Zap className="w-3 h-3 text-blue-600" />
+                                                    <span className="text-[9px] font-bold text-blue-600 uppercase tracking-wide">Match Boost</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Compact Tip */}
+                                            <div className="bg-blue-50/50 rounded-xl p-3 border border-blue-100/50 flex items-center gap-3">
+                                                <div className="h-8 w-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
+                                                    <Zap className="h-4 w-4" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-[11px] font-semibold text-blue-900 leading-tight">
+                                                        Increases precision by <span className="text-blue-600 font-bold">40%</span>.
+                                                    </p>
+                                                    <p className="text-[10px] text-blue-700/70 leading-tight">
+                                                        We'll prioritize skills found in the JD.
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div className="relative overflow-hidden rounded-xl border border-slate-200 shadow-sm group focus-within:ring-2 focus-within:ring-blue-500/5 focus-within:border-blue-400 transition-all">
+                                                <Textarea
+                                                    placeholder="Paste the target job description here..."
+                                                    className="h-full min-h-[268px] border-none bg-white p-4 text-xs font-medium leading-relaxed focus:ring-0 resize-y"
+                                                    value={formData.jobDescription}
+                                                    onChange={(e) => setFormData(prev => ({ ...prev, jobDescription: e.target.value }))}
+                                                />
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div className="relative">
-                                            <Textarea
-                                                placeholder="Paste the target job description for a tailored analysis..."
-                                                className="min-h-[448px] rounded-[2rem] border-blue-50 bg-gray-50/30 p-8 text-sm font-medium leading-relaxed focus:ring-4 focus:ring-accent-blue/10 focus:border-accent-blue/30 transition-all shadow-inner"
-                                                value={formData.jobDescription}
-                                                onChange={(e) => setFormData(prev => ({ ...prev, jobDescription: e.target.value }))}
-                                            />
-                                            {!formData.jobDescription && (
-                                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
-                                                    <Target className="w-20 h-20 text-accent-blue" />
-                                                </div>
+                                    <div className="mt-6 flex flex-col items-center justify-center gap-4">
+                                        <Button
+                                            type="submit"
+                                            disabled={isLoading}
+                                            className="h-12 w-full md:w-96 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-base font-bold transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2 group"
+                                        >
+                                            {isLoading ? (
+                                                <>
+                                                    <Loader2 className="h-5 w-5 animate-spin" /> RUNNING AI ENGINE
+                                                </>
+                                            ) : (
+                                                <>
+                                                    ANALYZE PROFILE
+                                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                                </>
                                             )}
-                                        </div>
+                                        </Button>
+                                        <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">
+                                            Encrypted & processed by private AI
+                                        </p>
                                     </div>
                                 </div>
-
-                                <div className="mt-12 pt-8 border-t border-gray-50 flex items-center justify-between gap-6">
-                                    <div className="hidden md:flex items-center gap-3 text-text-secondary">
-                                        <div className="h-8 w-8 rounded-full bg-blue-50 flex items-center justify-center">
-                                            <Info className="w-4 h-4 text-accent-blue" />
-                                        </div>
-                                        <p className="text-xs font-bold uppercase tracking-tighter italic">Your data is encrypted & processed by private AI models</p>
-                                    </div>
-                                    <Button
-                                        type="submit"
-                                        disabled={isLoading}
-                                        className="h-16 flex-1 md:flex-none md:w-[320px] bg-accent-blue hover:bg-accent-blue/90 text-white rounded-[1.5rem] text-lg font-black transition-all shadow-2xl shadow-blue-500/20 group"
-                                    >
-                                        {isLoading ? (
-                                            <>
-                                                <Loader2 className="mr-3 h-6 w-6 animate-spin" /> RUNNING AI ENGINE
-                                            </>
-                                        ) : (
-                                            <div className="flex items-center justify-center gap-3">
-                                                ANALYZE PROFILE
-                                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                            </div>
-                                        )}
-                                    </Button>
-                                </div>
-                            </CardContent>
-                        </form>
-                    </Card>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {[
-                            { title: "ATS Check", icon: <CheckCircle2 className="w-4 h-4" />, desc: "See how corporate systems parse your data." },
-                            { title: "Skill Gaps", icon: <Zap className="w-4 h-4" />, desc: "Find missing keywords compared to global standards." },
-                            { title: "Content Score", icon: <FileText className="w-4 h-4" />, desc: "Verify if your bullet points are outcome-focused." }
-                        ].map((item, i) => (
-                            <div key={i} className="bg-white p-6 rounded-[2rem] border border-blue-50 shadow-sm flex items-start gap-4 hover:shadow-lg transition-all duration-300 group">
-                                <div className="h-10 w-10 rounded-2xl bg-blue-50 text-accent-blue flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                                    {item.icon}
-                                </div>
-                                <div>
-                                    <h4 className="text-sm font-black text-text-primary uppercase tracking-widest">{item.title}</h4>
-                                    <p className="text-[11px] text-text-secondary font-medium mt-1 leading-normal">{item.desc}</p>
-                                </div>
-                            </div>
-                        ))}
+                            </form>
+                        </div>
                     </div>
                 </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-12">
+                    {[
+                        { title: "ATS Check", icon: <CheckCircle2 className="w-5 h-5" />, desc: "See how corporate systems parse your data." },
+                        { title: "Skill Gaps", icon: <Zap className="w-5 h-5" />, desc: "Find missing keywords compared to global standards." },
+                        { title: "Content Score", icon: <FileText className="w-5 h-5" />, desc: "Verify if your bullet points are outcome-focused." }
+                    ].map((item, i) => (
+                        <div key={i} className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex items-start gap-5 hover:shadow-xl hover:shadow-blue-500/5 hover:-translate-y-1 transition-all duration-300 group relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-2xl opacity-0 group-hover:opacity-50 transition-opacity duration-500 pointer-events-none -mr-10 -mt-10" />
+                            <div className="h-14 w-14 rounded-2xl bg-slate-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300 border border-slate-100 relative z-10 shadow-sm">
+                                {item.icon}
+                            </div>
+                            <div className="pt-1 relative z-10">
+                                <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest font-display mb-2">{item.title}</h4>
+                                <p className="text-[13px] text-slate-500 font-medium leading-relaxed group-hover:text-slate-600 transition-colors">{item.desc}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
-        </div>
+
+        </AuroraBackground >
     );
 }

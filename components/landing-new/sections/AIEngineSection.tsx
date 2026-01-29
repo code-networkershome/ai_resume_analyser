@@ -1,86 +1,75 @@
-import { useRef, useEffect } from 'react';
+"use client";
+
+import { useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import { Button } from '@/components/ui/button';
-import { Cpu, Upload, ArrowRight } from 'lucide-react';
+import { Cpu, Upload, ArrowRight, ShieldCheck, Zap, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 export function AIEngineSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        contentRef.current,
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+  useGSAP(() => {
+    gsap.fromTo(contentRef.current,
+      { y: 50, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 95%',
+          toggleActions: "play none none none"
+        },
+      }
+    );
+  }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} className="section-padding bg-gradient-to-b from-blue-900 to-blue-800">
-      <div className="max-w-4xl mx-auto">
+    <section ref={sectionRef} className="section-padding relative overflow-hidden bg-white">
+      {/* Animated Background Gradients */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-400/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-indigo-400/5 rounded-full blur-3xl" />
+      </div>
+
+      <div className="max-w-5xl mx-auto relative z-10">
         <div ref={contentRef} className="text-center">
-          {/* Icon */}
-          <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mx-auto mb-8">
-            <Cpu className="w-8 h-8 text-white" />
+          {/* Icon Badge */}
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-blue-50 border border-blue-100 mb-10 shadow-sm backdrop-blur-xl">
+            <Cpu className="w-5 h-5 text-blue-600" />
+            <span className="text-[10px] font-black uppercase tracking-[2px] text-blue-600">Enterprise AI Engine</span>
           </div>
 
-          <h2 className="text-h2 text-white mb-4">
-            Powered by an <span className="text-blue-300">Advanced AI Engine</span>
+          <h2 className="text-display-sm md:text-display text-slate-900 mb-8 font-display">
+            Fast, Private, and <br /><span className="gradient-text">Actionable Intelligence</span>
           </h2>
-          <p className="text-lg text-blue-100 max-w-2xl mx-auto mb-8 leading-relaxed">
-            We use modern language models paired with ATS heuristics to give you fast,
-            private, and actionable feedback—without sending your data to third parties.
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-12 leading-relaxed font-medium">
+            We utilize proprietary ATS parsing heuristics combined with state-of-the-art
+            language models to deliver expert-level feedback in milliseconds.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
-            <Link href="/dashboard">
-              <Button className="bg-white text-blue-800 hover:bg-blue-50 rounded-lg px-6 py-3 text-sm font-semibold btn-hover">
-                <Upload className="w-4 h-4 mr-2" />
-                Check My Resume
-              </Button>
-            </Link>
-            <Button
-              variant="outline"
-              className="border-white/30 text-white hover:bg-white/10 rounded-lg px-6 py-3 text-sm font-semibold"
-            >
-              See How It Works
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-8 lg:gap-12">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">GPT-4o</div>
-              <div className="text-sm text-blue-200 mt-1">Language Model</div>
-            </div>
-            <div className="w-px h-12 bg-white/20" />
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">&lt;2s</div>
-              <div className="text-sm text-blue-200 mt-1">Response Time</div>
-            </div>
-            <div className="w-px h-12 bg-white/20" />
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">256-bit</div>
-              <div className="text-sm text-blue-200 mt-1">Encryption</div>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {[
+              { label: "Language Model", value: "GPT-4o Premium", icon: Sparkles, color: "icon-glow-amber" },
+              { label: "Processing Speed", value: "< 2 Seconds", icon: Zap, color: "icon-glow-blue" },
+              { label: "Privacy Focus", value: "Fully Encrypted", icon: ShieldCheck, color: "icon-glow-emerald" }
+            ].map((stat, i) => (
+              <div key={i} className="p-10 rounded-[2rem] bg-white border border-slate-100 hover:border-blue-100 hover:shadow-2xl hover:shadow-blue-500/5 transition-all group">
+                <div className={`w-14 h-14 premium-icon-bg ${stat.color} mb-8 mx-auto group-hover:scale-110 transition-transform`}>
+                  <stat.icon className="w-7 h-7 fill-current" />
+                </div>
+                <div className="text-2xl font-bold text-slate-900 mb-2 font-display">{stat.value}</div>
+                <div className="text-[10px] font-black uppercase tracking-[2px] text-slate-400">{stat.label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

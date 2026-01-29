@@ -9,16 +9,6 @@ const config: Config = {
     ],
     theme: {
         extend: {
-            fontSize: {
-                xs: ['11px', '1.35'],
-                sm: ['12px', '1.4'],
-                base: ['13px', '1.5'],
-                md: ['14px', '1.5'],
-                lg: ['16px', '1.45'],
-                xl: ['18px', '1.4'],
-                '2xl': ['20px', '1.35'],
-                '3xl': ['24px', '1.3'],
-            },
             colors: {
                 border: "hsl(var(--border))",
                 input: "hsl(var(--input))",
@@ -53,32 +43,26 @@ const config: Config = {
                     DEFAULT: "hsl(var(--card))",
                     foreground: "hsl(var(--card-foreground))",
                 },
-                // ResumeAI new colors
-                'bg-primary': '#F0F7FF',
-                'bg-secondary': '#FFFFFF',
-                'accent-blue': '#3B82F6',
-                'accent-light': '#DBEAFE',
-                'text-primary': '#1E293B',
-                'text-secondary': '#64748B',
-                'text-inverse': '#FFFFFF',
-                'card-light': '#FFFFFF',
+                'bg-primary': 'var(--bg-primary)',
+                'accent-blue': 'var(--accent-blue)',
+                'accent-cyan': 'var(--accent-cyan)',
+                'accent-purple': 'var(--accent-purple)',
+                'accent-pink': 'var(--accent-pink)',
+                'text-primary': 'var(--text-primary)',
+                'text-secondary': 'var(--text-secondary)',
             },
             borderRadius: {
                 lg: "var(--radius)",
                 md: "calc(var(--radius) - 2px)",
                 sm: "calc(var(--radius) - 4px)",
-            },
-            boxShadow: {
-                xs: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
-                'card': '0 4px 24px rgba(59, 130, 246, 0.08)',
-                'card-hover': '0 12px 32px rgba(59, 130, 246, 0.12)',
-                'button': '0 8px 24px rgba(59, 130, 246, 0.3)',
+                xl: "calc(var(--radius) + 4px)",
+                '2xl': "calc(var(--radius) + 8px)",
+                '3xl': "calc(var(--radius) + 12px)",
             },
             fontFamily: {
-                sans: ["var(--font-inter)", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
-            },
-            spacing: {
-                '4.5': '1.125rem',
+                sans: ["var(--font-plus-jakarta)", "ui-sans-serif", "system-ui"],
+                display: ["var(--font-outfit)", "ui-sans-serif", "system-ui"],
+                mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
             },
             keyframes: {
                 "accordion-down": {
@@ -89,30 +73,14 @@ const config: Config = {
                     from: { height: "var(--radix-accordion-content-height)" },
                     to: { height: "0" },
                 },
-                "gradient-x": {
-                    "0%, 100%": {
-                        "background-size": "200% 200%",
-                        "background-position": "left center",
-                    },
-                    "50%": {
-                        "background-size": "200% 200%",
-                        "background-position": "right center",
-                    },
-                },
-                "float": {
-                    "0%, 100%": { transform: "translateY(0px)" },
-                    "50%": { transform: "translateY(-10px)" },
-                },
             },
             animation: {
                 "accordion-down": "accordion-down 0.2s ease-out",
                 "accordion-up": "accordion-up 0.2s ease-out",
-                "gradient-x": "gradient-x 15s ease infinite",
-                "float": "float 4s ease-in-out infinite",
             },
         },
     },
-    plugins: [require("@tailwindcss/typography")],
+    plugins: [require("@tailwindcss/typography"), require("tailwindcss-animate")],
 };
 
 export default config;

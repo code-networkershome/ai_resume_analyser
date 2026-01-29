@@ -1,10 +1,21 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers";
 import { Toaster } from "sonner";
+import { GrainOverlay } from "@/components/layout/GrainOverlay";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const plusJakartaSans = Plus_Jakarta_Sans({
+    subsets: ["latin"],
+    variable: "--font-plus-jakarta",
+    display: 'swap',
+});
+
+const outfit = Outfit({
+    subsets: ["latin"],
+    variable: "--font-outfit",
+    display: 'swap',
+});
 
 export const metadata: Metadata = {
     title: {
@@ -22,13 +33,14 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <body className={`${inter.variable} font-sans antialiased`}>
+            <body className={`${plusJakartaSans.variable} ${outfit.variable} font-sans antialiased`}>
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="light"
                     enableSystem={false}
                     disableTransitionOnChange
                 >
+                    <GrainOverlay />
                     {children}
                     <Toaster position="top-center" richColors />
                 </ThemeProvider>

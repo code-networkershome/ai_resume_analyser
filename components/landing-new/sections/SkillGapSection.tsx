@@ -1,142 +1,149 @@
-import { useRef, useEffect } from 'react';
+"use client";
+
+import { useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import { FeatureCard } from '@/components/landing-new/shared/FeatureCard';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { TrendingUp, AlertCircle, BookOpen, Lightbulb, ArrowRight } from 'lucide-react';
+import { TrendingUp, AlertCircle, BookOpen, Lightbulb, ArrowRight, Sparkles } from 'lucide-react';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const missingSkills = [
   { name: 'GraphQL', priority: 'high' },
   { name: 'CI/CD', priority: 'medium' },
-  { name: 'Performance Budgeting', priority: 'medium' },
+  { name: 'System Design', priority: 'medium' },
 ];
 
 export function SkillGapSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
+  useGSAP(() => {
+    if (cardsRef.current) {
       gsap.fromTo(
-        cardsRef.current?.children || [],
-        { y: 50, opacity: 0 },
+        cardsRef.current.children,
+        { y: 60, opacity: 0, scale: 0.9 },
         {
           y: 0,
           opacity: 1,
+          scale: 1,
           stagger: 0.15,
-          duration: 0.8,
-          ease: 'power2.out',
+          duration: 1,
+          ease: 'power3.out',
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none reverse',
+            start: 'top 85%',
+            toggleActions: "play none none none"
           },
         }
       );
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+    }
+  }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} className="section-padding">
-      <div className="max-w-6xl mx-auto">
+    <section ref={sectionRef} className="section-padding relative overflow-hidden bg-slate-50/50">
+      <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-12">
-          <span className="text-micro text-accent-blue mb-3 block">Skill Analysis</span>
-          <h2 className="text-h2 text-text-primary mb-4">
-            Close Your <span className="text-accent-blue">Skill Gaps</span>
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 mb-4">
+            <TrendingUp className="w-4 h-4 text-blue-600" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-blue-600">Career Trajectory</span>
+          </div>
+          <h2 className="text-headline text-slate-900 mb-6">
+            Close Your <span className="gradient-text">Skill Gaps</span> Today
           </h2>
-          <p className="text-body text-text-secondary max-w-2xl mx-auto">
-            Compare your profile to any job description and get actionable steps to close the gaps.
+          <p className="text-body-lg text-slate-600 max-w-2xl mx-auto">
+            Actionable insights that map your current profile against the demands of the
+            top tech companies, giving you a clear roadmap to your next role.
           </p>
         </div>
 
-        <div ref={cardsRef} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Card */}
-          <FeatureCard className="p-6 lg:p-8">
-            <div className="w-12 h-12 rounded-xl bg-accent-light flex items-center justify-center mb-6">
-              <TrendingUp className="w-6 h-6 text-accent-blue" />
+        <div ref={cardsRef} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Card 1 */}
+          <div className="premium-card p-10 flex flex-col h-full bg-white">
+            <div className="w-14 h-14 premium-icon-bg icon-glow-blue mb-8">
+              <TrendingUp className="w-7 h-7" />
             </div>
-            <h3 className="text-xl font-semibold text-text-primary mb-3">
-              Skill Gap Analysis
+            <h3 className="text-2xl font-bold text-slate-900 mb-4 font-display">
+              Gap Roadmap
             </h3>
-            <p className="text-sm text-text-secondary mb-6">
-              Compare your profile to any job description. Get a prioritized list of gaps.
+            <p className="text-slate-500 text-sm mb-8 leading-relaxed">
+              Prioritized analysis of what's missing between your profile and the job description.
             </p>
-            <div className="pt-4 border-t border-gray-100">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-text-secondary">Skills matched</span>
-                <span className="font-semibold text-text-primary">12/15</span>
+            <div className="pt-6 border-t border-slate-50 space-y-4 mt-auto">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-[11px] font-black uppercase tracking-widest">
+                  <span className="text-slate-400">Match Accuracy</span>
+                  <span className="text-blue-600">80%</span>
+                </div>
+                <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200/50">
+                  <div className="h-full bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.2)]" style={{ width: '80%' }} />
+                </div>
               </div>
-              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full bg-green-500 rounded-full" style={{ width: '80%' }} />
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
+                <AlertCircle className="w-4 h-4 text-amber-500" />
+                <span>3 critical skills identified</span>
               </div>
-              <p className="text-xs text-text-secondary mt-2">3 skills need attention</p>
             </div>
-          </FeatureCard>
+          </div>
 
-          {/* Middle Card */}
-          <FeatureCard className="p-6 lg:p-8">
-            <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center mb-6">
-              <AlertCircle className="w-6 h-6 text-amber-600" />
+          {/* Card 2 */}
+          <div className="premium-card p-10 flex flex-col h-full bg-white">
+            <div className="w-14 h-14 premium-icon-bg icon-glow-rose mb-8">
+              <AlertCircle className="w-7 h-7" />
             </div>
-            <h3 className="text-xl font-semibold text-text-primary mb-4">
-              Missing Skills
+            <h3 className="text-2xl font-bold text-slate-900 mb-6 font-display">
+              Critical Needs
             </h3>
-            <div className="space-y-3">
+            <div className="space-y-3 flex-grow">
               {missingSkills.map((skill, index) => (
-                <div key={skill.name} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                  <div className="flex items-center gap-3">
-                    <span className="w-6 h-6 rounded-full bg-accent-light text-accent-blue text-xs font-medium flex items-center justify-center">
-                      {index + 1}
+                <div key={skill.name} className="flex items-center justify-between p-4 bg-slate-50/50 rounded-2xl border border-slate-100/50 transition-all hover:translate-x-1 group">
+                  <div className="flex items-center gap-4">
+                    <span className="w-8 h-8 rounded-full bg-white shadow-sm text-slate-600 text-[10px] font-black flex items-center justify-center group-hover:bg-rose-50 group-hover:text-rose-600 transition-colors">
+                      0{index + 1}
                     </span>
-                    <span className="font-medium text-text-primary text-sm">{skill.name}</span>
+                    <span className="font-bold text-slate-900 text-sm">{skill.name}</span>
                   </div>
-                  <Badge className={`rounded-full text-xs ${
-                    skill.priority === 'high' 
-                      ? 'bg-red-100 text-red-600' 
-                      : 'bg-amber-100 text-amber-600'
-                  }`}>
+                  <Badge className={`rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-wider ${skill.priority === 'high'
+                    ? 'bg-rose-50 text-rose-600 border-rose-100'
+                    : 'bg-amber-50 text-amber-600 border-amber-100'
+                    } shadow-none`}>
                     {skill.priority}
                   </Badge>
                 </div>
               ))}
             </div>
-            <p className="text-xs text-text-secondary mt-4">
-              Add 1–2 projects or rephrase existing work to cover these skills.
-            </p>
-          </FeatureCard>
+          </div>
 
-          {/* Right Card */}
-          <FeatureCard className="p-6 lg:p-8">
-            <div className="w-12 h-12 rounded-xl bg-accent-light flex items-center justify-center mb-6">
-              <Lightbulb className="w-6 h-6 text-accent-blue" />
+          {/* Card 3 */}
+          <div className="premium-card p-10 flex flex-col h-full bg-white">
+            <div className="w-14 h-14 premium-icon-bg icon-glow-purple mb-8">
+              <Lightbulb className="w-7 h-7" />
             </div>
-            <h3 className="text-xl font-semibold text-text-primary mb-3">
-              Action Plan
+            <h3 className="text-2xl font-bold text-slate-900 mb-4 font-display">
+              Smart Suggestions
             </h3>
-            <p className="text-sm text-text-secondary mb-4">
-              Generate a step-by-step plan: courses, project ideas, and bullet rewrites.
+            <p className="text-slate-500 text-sm mb-8 leading-relaxed">
+              Receive personalized project ideas and course recommendations to pad your experience.
             </p>
-            <div className="flex flex-wrap gap-3 mb-4">
-              <div className="flex items-center gap-2 text-sm text-text-secondary">
-                <BookOpen className="w-4 h-4 text-accent-blue" />
-                <span>Courses</span>
+            <div className="flex flex-wrap gap-4 pt-6 border-t border-slate-50 mt-auto">
+              <div className="flex items-center gap-2.5 text-xs font-bold text-slate-500">
+                <BookOpen className="w-4 h-4 text-purple-500" />
+                <span>Tutorial Mapping</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-text-secondary">
-                <TrendingUp className="w-4 h-4 text-accent-blue" />
-                <span>Projects</span>
+              <div className="flex items-center gap-2.5 text-xs font-bold text-slate-500">
+                <Sparkles className="w-4 h-4 text-amber-500" />
+                <span>Project Hooks</span>
               </div>
             </div>
-            <Button variant="outline" className="rounded-lg text-sm w-full">
-              Generate Action Plan
+            <Button className="mt-8 btn-primary w-full h-12 text-sm font-bold shadow-lg shadow-blue-500/20">
+              Generate Growth Plan
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
-          </FeatureCard>
+          </div>
         </div>
       </div>
     </section>

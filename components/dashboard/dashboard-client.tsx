@@ -27,6 +27,8 @@ import { formatDate } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import { ScoreChart } from "./score-chart";
 
+import { AuroraBackground } from "@/components/shared/AuroraBackground";
+
 export function DashboardClient({
     usage,
     reviews
@@ -50,20 +52,24 @@ export function DashboardClient({
     const scoreTrend = reviews.length > 1 ? lastScore - reviews[1].atsScore : 0;
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-[#F8FAFC] to-white pb-20">
+        <AuroraBackground className="pb-20">
             <div className="max-w-7xl mx-auto px-6 lg:px-12 py-10 space-y-10">
                 {/* Header */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 relative z-10">
                     <div className="space-y-2">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-accent-light rounded-full">
-                            <span className="text-[10px] font-bold text-accent-blue uppercase tracking-widest">Dashboard</span>
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white border border-blue-100 rounded-full shadow-sm">
+                            <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                            </span>
+                            <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Dashboard</span>
                         </div>
-                        <h1 className="text-3xl font-bold tracking-tight text-text-primary">Welcome Back</h1>
-                        <p className="text-text-secondary font-medium">Track your resume performance and improvement over time.</p>
+                        <h1 className="text-4xl font-black tracking-tight text-slate-900 font-display">Welcome Back</h1>
+                        <p className="text-slate-500 font-medium text-lg">Track your resume performance and improvement over time.</p>
                     </div>
                     <Link href="/review">
-                        <Button className="bg-accent-blue hover:bg-accent-blue/90 text-white rounded-xl h-12 px-6 font-semibold transition-all shadow-lg shadow-accent-blue/20 flex items-center gap-2">
-                            <PlusCircle className="w-5 h-5" />
+                        <Button className="bg-blue-500 hover:bg-blue-600 text-white rounded-full h-14 px-8 font-bold transition-all shadow-xl shadow-blue-500/20 hover:shadow-blue-500/30 hover:-translate-y-0.5 flex items-center gap-2 group">
+                            <PlusCircle className="w-5 h-5 group-hover:rotate-90 transition-transform" />
                             New Analysis
                         </Button>
                     </Link>
@@ -118,32 +124,37 @@ export function DashboardClient({
                     </Card>
 
                     {/* Quick Tips or Usage */}
-                    <Card className="shadow-2xl shadow-blue-500/5 border-none overflow-hidden bg-accent-blue text-white relative">
-                        <div className="absolute top-0 right-0 p-8 opacity-10">
-                            <Zap className="h-32 w-32" />
-                        </div>
-                        <CardHeader className="relative z-10">
-                            <CardTitle className="text-lg font-bold">Improve Your Score</CardTitle>
-                            <CardDescription className="text-blue-100">AI-powered suggestions to hit the 90+ mark.</CardDescription>
+                    {/* Quick Tips or Usage */}
+                    <Card className="shadow-2xl shadow-blue-500/5 border border-slate-100 overflow-hidden bg-white/80 backdrop-blur-md relative">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50/50 rounded-bl-full pointer-events-none" />
+
+                        <CardHeader className="relative z-10 pb-2">
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center border border-blue-100">
+                                    <Zap className="h-5 w-5 text-blue-600" />
+                                </div>
+                                <CardTitle className="text-xl font-bold tracking-tight text-slate-900 font-display">Improve Your Score</CardTitle>
+                            </div>
+                            <CardDescription className="text-slate-500 font-medium">AI-powered suggestions to hit the 90+ mark.</CardDescription>
                         </CardHeader>
-                        <CardContent className="relative z-10 space-y-4">
-                            <ul className="space-y-4">
+                        <CardContent className="relative z-10 space-y-6 pt-2">
+                            <ul className="space-y-3">
                                 {[
                                     "Quantify your impact using metrics.",
                                     "Use active, powerful verbs.",
                                     "Tailor keywords for each role.",
                                 ].map((tip, i) => (
-                                    <li key={i} className="flex gap-3 text-sm font-medium">
-                                        <div className="h-5 w-5 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 text-white text-[10px] font-bold">
+                                    <li key={i} className="flex gap-3 items-start text-sm font-medium text-slate-700">
+                                        <div className="h-5 w-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 text-[10px] font-black mt-0.5">
                                             {i + 1}
                                         </div>
-                                        {tip}
+                                        <span className="leading-relaxed">{tip}</span>
                                     </li>
                                 ))}
                             </ul>
-                            <div className="pt-4">
+                            <div className="pt-2">
                                 <Link href="/review">
-                                    <Button variant="outline" className="w-full bg-white/10 border-white/20 hover:bg-white/20 text-white rounded-xl h-11 transition-all">
+                                    <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white rounded-xl h-12 transition-all font-bold shadow-lg shadow-blue-500/20 hover:scale-[1.02] active:scale-95">
                                         Start New Scan
                                     </Button>
                                 </Link>
@@ -240,7 +251,7 @@ export function DashboardClient({
                     </div>
                 </Card>
             </div>
-        </div>
+        </AuroraBackground>
     );
 }
 
@@ -258,18 +269,19 @@ function StatCard({
     };
 
     return (
-        <Card className="p-6 shadow-2xl shadow-blue-500/5 border-none hover:translate-y-[-2px] transition-all overflow-hidden bg-white">
-            <div className="flex justify-between items-start">
+        <Card className="p-6 shadow-sm hover:shadow-md border border-slate-100 transition-all bg-white relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-slate-50 to-transparent rounded-bl-full -mr-4 -mt-4 opacity-50 group-hover:scale-110 transition-transform duration-500 pointer-events-none" />
+            <div className="flex justify-between items-start relative z-10">
                 <div className="space-y-4 w-full">
-                    <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center", colors[color] || colors.blue)}>
+                    <div className={cn("h-12 w-12 rounded-2xl flex items-center justify-center shadow-sm border border-slate-100/50 group-hover:scale-110 transition-transform duration-300", colors[color] || colors.blue)}>
                         {icon}
                     </div>
                     <div>
-                        <p className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">{title}</p>
-                        <h3 className="text-2xl font-extrabold text-text-primary mt-1">{value}</h3>
+                        <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1">{title}</p>
+                        <h3 className="text-3xl font-black text-slate-900 font-display tracking-tight">{value}</h3>
                     </div>
-                    <p className="text-[11px] font-medium text-text-secondary flex items-center gap-1.5">
-                        {trend === "up" && <TrendingUp className="h-3 w-3 text-emerald-500" />}
+                    <p className="text-xs font-bold text-slate-500 flex items-center gap-2">
+                        {trend === "up" && <TrendingUp className="h-3.5 w-3.5 text-emerald-500" />}
                         {description}
                     </p>
                 </div>

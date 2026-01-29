@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { ArrowRight, Sparkles, Zap, Star, TrendingUp, LayoutDashboard, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Star, Award, LayoutDashboard, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 
@@ -13,18 +13,33 @@ export function HeroSection() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Animate content on load
+      // Content entrance animation
       gsap.fromTo(
-        contentRef.current?.children || [],
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, stagger: 0.1, duration: 0.8, ease: 'power2.out' }
+        contentRef.current?.querySelectorAll('.animate-item') || [],
+        { y: 60, opacity: 0, rotateX: 15 },
+        {
+          y: 0,
+          opacity: 1,
+          rotateX: 0,
+          stagger: 0.12,
+          duration: 1,
+          ease: 'power3.out'
+        }
       );
 
-      // Animate visuals
+      // Visuals entrance with stagger
       gsap.fromTo(
-        visualsRef.current?.children || [],
-        { y: 40, opacity: 0, scale: 0.95 },
-        { y: 0, opacity: 1, scale: 1, stagger: 0.15, duration: 1, ease: 'power2.out', delay: 0.3 }
+        visualsRef.current?.querySelectorAll('.visual-item') || [],
+        { scale: 0.8, opacity: 0, y: 40 },
+        {
+          scale: 1,
+          opacity: 1,
+          y: 0,
+          stagger: 0.15,
+          duration: 1.2,
+          ease: 'back.out(1.7)',
+          delay: 0.3
+        }
       );
     }, heroRef);
 
@@ -35,185 +50,214 @@ export function HeroSection() {
     <section
       ref={heroRef}
       id="hero"
-      className="min-h-screen pt-24 pb-16 px-6 lg:px-12 relative overflow-hidden"
+      className="relative min-h-screen pt-24 pb-16 px-6 lg:px-12 overflow-hidden aurora-bg"
     >
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center min-h-[80vh]">
+      {/* Background Gradient Orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-20 right-10 w-80 h-80 bg-purple-400/15 rounded-full blur-3xl animate-float-reverse" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-400/10 rounded-full blur-3xl animate-float-slow" />
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center min-h-[85vh]">
           {/* Left Content */}
-          <div ref={contentRef} className="space-y-6">
-            {/* Label */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent-light rounded-full">
-              <span className="w-2 h-2 bg-accent-blue rounded-full animate-pulse"></span>
-              <span className="text-xs font-medium text-accent-blue uppercase tracking-wider">
-                AI Resume Analyser
-              </span>
+          <div ref={contentRef} className="space-y-8" style={{ perspective: '1000px' }}>
+            {/* Badge */}
+            <div className="animate-item">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-200/50">
+                <Sparkles className="w-4 h-4 text-blue-500" />
+                <span className="text-sm font-medium bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  AI-Powered Resume Analyser
+                </span>
+                <span className="px-2 py-0.5 text-xs bg-blue-500 text-white rounded-full">NEW</span>
+              </div>
             </div>
 
             {/* Headline */}
-            <h1 className="text-h1 text-text-primary">
-              Get 3x Interviews with Our{' '}
-              <span className="relative">
-                <span className="relative z-10">AI based</span>
-                <span className="absolute bottom-1 left-0 right-0 h-3 bg-accent-light -z-0"></span>
+            <h1 className="animate-item text-display text-slate-900 leading-tight">
+              Get <span className="gradient-text">3x Interviews</span> with Our{' '}
+              <span className="relative inline-block">
+                <span className="relative z-10">AI-Powered</span>
+                <span className="absolute -bottom-2 left-0 right-0 h-4 bg-gradient-to-r from-blue-200 via-cyan-200 to-purple-200 -z-0 rounded-full opacity-60"></span>
               </span>{' '}
-              <span className="text-accent-blue">Resume Analyser</span>
+              Resume Analyser
             </h1>
 
             {/* Subheadline */}
-            <p className="text-body text-text-secondary max-w-lg">
-              Elevate your interview chances with deep AI analysis that identifies gaps,
-              optimizes keywords, and ensures ATS compatibility in seconds.
+            <p className="animate-item text-body-lg text-slate-600 max-w-lg leading-relaxed">
+              Transform your resume with AI that understands what recruiters want.
+              Get real-time ATS scoring, keyword optimization, and smart content suggestions.
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-wrap items-center gap-4 pt-2">
+            <div className="animate-item flex flex-wrap items-center gap-4">
               {status === 'authenticated' ? (
                 <>
                   <Link href="/dashboard">
-                    <Button
-                      className="bg-accent-blue hover:bg-accent-blue/90 text-white rounded-xl px-8 py-6 text-base font-bold btn-hover flex items-center gap-3 shadow-xl shadow-blue-500/20"
-                    >
+                    <Button className="btn-primary h-14 px-10 rounded-2xl flex items-center gap-2 text-base shadow-2xl shadow-blue-500/20">
                       <LayoutDashboard className="w-5 h-5" />
                       Go to Dashboard
                     </Button>
                   </Link>
                   <Link href="/review">
-                    <Button
-                      variant="outline"
-                      className="border-blue-200 text-accent-blue hover:bg-blue-50 rounded-xl px-8 py-6 text-base font-bold flex items-center gap-3"
-                    >
+                    <Button variant="outline" className="h-14 px-10 rounded-2xl border-slate-200 text-slate-600 hover:bg-slate-50 font-medium text-base flex items-center gap-2">
                       <PlusCircle className="w-5 h-5" />
                       New Analysis
                     </Button>
                   </Link>
                 </>
               ) : (
-                <Link href="/dashboard">
-                  <Button
-                    className="bg-accent-blue hover:bg-accent-blue/90 text-white rounded-xl px-8 py-6 text-base font-bold btn-hover flex items-center gap-2 shadow-xl shadow-blue-500/20"
-                  >
-                    Analyse My Resume
+                <Link href="/review">
+                  <Button className="btn-primary h-14 px-10 rounded-2xl flex items-center gap-2 text-base shadow-2xl shadow-blue-500/20">
+                    Build Your Resume
                     <ArrowRight className="w-5 h-5" />
                   </Button>
                 </Link>
               )}
+              <Link href="#how-it-works">
+                <button className="px-6 py-3 h-14 rounded-xl font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center gap-2 group">
+                  <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
+                    <TrendingUp className="w-4 h-4" />
+                  </div>
+                  See How It Works
+                </button>
+              </Link>
             </div>
 
-            {/* Trust Badges */}
-            <div className="flex flex-wrap items-center gap-4 pt-4">
-              <div className="badge-trust">
-                <Award className="w-4 h-4 text-amber-500" />
-                <span className="text-text-primary">#1 Product of the Day</span>
+            {/* Stats Row */}
+            <div className="animate-item flex flex-wrap items-center gap-6 pt-4">
+              <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white/60 border border-slate-200/50 backdrop-blur-sm shadow-sm transition-all hover:shadow-md hover:bg-white/80">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
+                  <Star className="w-5 h-5 text-white fill-white" />
+                </div>
+                <div>
+                  <div className="text-sm font-semibold text-slate-900">#1 Product</div>
+                  <div className="text-xs text-slate-500">of the Day</div>
+                </div>
               </div>
-              <div className="badge-trust">
-                <Star className="w-4 h-4 text-green-500 fill-green-500" />
-                <span className="text-text-primary">Trust Pilot Excellent 4.8</span>
+              <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white/60 border border-slate-200/50 backdrop-blur-sm shadow-sm transition-all hover:shadow-md hover:bg-white/80">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-lg">
+                  <Zap className="w-5 h-5 text-white fill-white" />
+                </div>
+                <div>
+                  <div className="text-sm font-semibold text-slate-900">4.9 Rating</div>
+                  <div className="text-xs text-slate-500">2,000+ Reviews</div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Right Visuals - Floating Resume Cards */}
-          <div ref={visualsRef} className="relative h-[500px] lg:h-[600px] hidden lg:block">
-            {/* Main Resume Card */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 bg-white rounded-2xl shadow-card-hover p-6 animate-float z-20">
+          {/* Right Visuals - 3D Floating Cards */}
+          <div ref={visualsRef} className="relative h-[550px] lg:h-[650px] hidden lg:block">
+            {/* Main Resume Card - Center */}
+            <div className="visual-item absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 glass-card rounded-3xl p-6 animate-float z-20 transition-all hover:shadow-2xl hover:shadow-blue-500/10">
               {/* Resume Header */}
-              <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100">
-                <div className="w-12 h-12 bg-gradient-to-br from-accent-blue to-blue-400 rounded-full flex items-center justify-center text-white font-bold">
+              <div className="flex items-center gap-4 mb-5 pb-5 border-b border-slate-200/50">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg">
                   JD
                 </div>
                 <div>
-                  <h3 className="font-semibold text-text-primary">John Doe</h3>
-                  <p className="text-xs text-text-secondary">Senior Developer</p>
+                  <h3 className="font-bold text-slate-900 text-lg">John Doe</h3>
+                  <p className="text-sm text-slate-500">Senior Full Stack Developer</p>
                 </div>
               </div>
 
               {/* Resume Content */}
-              <div className="space-y-3">
-                <div className="h-2 bg-gray-100 rounded w-3/4"></div>
-                <div className="h-2 bg-gray-100 rounded w-full"></div>
-                <div className="h-2 bg-gray-100 rounded w-5/6"></div>
+              <div className="space-y-4">
+                <div>
+                  <div className="h-2.5 bg-slate-100 rounded-full w-full mb-2"></div>
+                  <div className="h-2.5 bg-slate-100 rounded-full w-4/5"></div>
+                </div>
 
                 <div className="pt-3">
-                  <div className="text-xs font-semibold text-text-primary mb-2">Experience</div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 bg-blue-100 rounded flex items-center justify-center">
-                        <span className="text-xs text-accent-blue">G</span>
+                  <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Experience</div>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-md">
+                        <span className="text-white text-xs font-bold">G</span>
                       </div>
-                      <div className="h-2 bg-gray-100 rounded w-32"></div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 bg-purple-100 rounded flex items-center justify-center">
-                        <span className="text-xs text-purple-600">M</span>
+                      <div className="flex-1">
+                        <div className="h-2 bg-slate-100 rounded-full w-3/4 mb-1"></div>
+                        <div className="h-1.5 bg-slate-50 rounded-full w-1/2"></div>
                       </div>
-                      <div className="h-2 bg-gray-100 rounded w-28"></div>
                     </div>
                   </div>
                 </div>
 
                 <div className="pt-2">
-                  <div className="text-xs font-semibold text-text-primary mb-2">Skills</div>
-                  <div className="flex flex-wrap gap-1.5">
-                    <span className="px-2 py-1 bg-accent-light text-accent-blue text-xs rounded">React</span>
-                    <span className="px-2 py-1 bg-accent-light text-accent-blue text-xs rounded">TypeScript</span>
-                    <span className="px-2 py-1 bg-accent-light text-accent-blue text-xs rounded">Node.js</span>
+                  <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Skills</div>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-3 py-1.5 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-600 text-xs font-medium rounded-full">React</span>
+                    <span className="px-3 py-1.5 bg-gradient-to-r from-cyan-50 to-cyan-100 text-cyan-600 text-xs font-medium rounded-full">TypeScript</span>
+                    <span className="px-3 py-1.5 bg-gradient-to-r from-purple-50 to-purple-100 text-purple-600 text-xs font-medium rounded-full">Node.js</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Score Card - Top Right */}
-            <div className="absolute top-8 right-4 w-40 bg-white rounded-xl shadow-card p-4 animate-float-delayed z-30">
+            <div className="visual-item absolute top-8 right-4 glass-card rounded-2xl p-5 animate-float-reverse z-30 shadow-2xl shadow-blue-500/10">
               <div className="text-center">
-                <div className="text-3xl font-bold text-accent-blue">85%</div>
-                <div className="text-xs text-text-secondary mt-1">Resume Strength</div>
-                <div className="mt-2 h-2 bg-gray-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-accent-blue to-green-400 w-[85%]"></div>
+                <div className="relative inline-block">
+                  <div className="text-4xl font-bold gradient-text">92%</div>
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                </div>
+                <div className="text-sm font-medium text-slate-600 mt-1">Resume Score</div>
+                <div className="mt-3 h-2 bg-slate-100 rounded-full overflow-hidden w-32 border border-slate-200/50 p-[1px]">
+                  <div className="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-green-400 rounded-full" style={{ width: '92%' }}></div>
                 </div>
               </div>
             </div>
 
-            {/* ATS Score Card - Bottom Left */}
-            <div className="absolute bottom-16 left-0 w-44 bg-white rounded-xl shadow-card p-4 animate-float z-10">
+            {/* ATS Badge - Bottom Left */}
+            <div className="visual-item absolute bottom-24 left-0 glass-card rounded-2xl p-4 animate-float-slow z-10 shadow-2xl shadow-emerald-500/10">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                  <span className="text-green-600 text-lg">✓</span>
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-lg">
+                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  </svg>
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-text-primary">ATS Ready</div>
-                  <div className="text-xs text-text-secondary">98% Compatible</div>
+                  <div className="text-sm font-bold text-slate-900">ATS Ready</div>
+                  <div className="text-xs text-slate-500">98% Compatible</div>
                 </div>
               </div>
             </div>
 
-            {/* Keyword Match Card - Top Left */}
-            <div className="absolute top-16 left-4 w-36 bg-white rounded-xl shadow-card p-3 z-10">
-              <div className="text-xs font-semibold text-text-primary mb-2">Keywords</div>
-              <div className="flex flex-wrap gap-1">
-                <span className="px-2 py-0.5 bg-green-100 text-green-600 text-[10px] rounded">React ✓</span>
-                <span className="px-2 py-0.5 bg-green-100 text-green-600 text-[10px] rounded">AWS ✓</span>
-                <span className="px-2 py-0.5 bg-amber-100 text-amber-600 text-[10px] rounded">+3</span>
+            {/* Keywords Card - Top Left */}
+            <div className="visual-item absolute top-16 left-4 glass-card rounded-xl p-4 z-10 shadow-lg shadow-blue-500/5">
+              <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Keywords Matched</div>
+              <div className="flex flex-wrap gap-1.5">
+                <span className="px-2.5 py-1 bg-green-100 text-green-600 text-[10px] font-medium rounded-full flex items-center gap-1">
+                  React <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                </span>
+                <span className="px-2.5 py-1 bg-green-100 text-green-600 text-[10px] font-medium rounded-full flex items-center gap-1">
+                  AWS <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                </span>
               </div>
             </div>
 
-            {/* Decorative Elements */}
-            <div className="absolute top-1/4 right-1/4 w-20 h-20 bg-accent-light rounded-full opacity-50 blur-2xl"></div>
-            <div className="absolute bottom-1/4 left-1/3 w-32 h-32 bg-blue-200 rounded-full opacity-30 blur-3xl"></div>
+            {/* Decorative Glow */}
+            <div className="absolute top-1/3 right-1/4 w-32 h-32 bg-blue-400/20 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-1/3 left-1/4 w-40 h-40 bg-purple-400/15 rounded-full blur-3xl"></div>
           </div>
         </div>
 
         {/* Trust Logos */}
-        <div className="mt-16 pt-8 border-t border-blue-100">
-          <p className="text-center text-sm text-text-secondary mb-6">
-            Trusted by professionals from great companies
+        <div className="mt-8 pt-8 border-t border-slate-200/50">
+          <p className="text-center text-sm text-slate-500 mb-6 font-medium">
+            Trusted by professionals hiring at
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 lg:gap-16 opacity-60">
-            <span className="text-lg font-bold text-text-primary">Google</span>
-            <span className="text-lg font-bold text-text-primary">Meta</span>
-            <span className="text-lg font-bold text-text-primary">Amazon</span>
-            <span className="text-lg font-bold text-text-primary">Netflix</span>
-            <span className="text-lg font-bold text-text-primary">Microsoft</span>
-            <span className="text-lg font-bold text-text-primary">Apple</span>
+          <div className="flex flex-wrap items-center justify-center gap-8 lg:gap-16 opacity-40 hover:opacity-100 transition-opacity">
+            {['Google', 'Meta', 'Amazon', 'Netflix', 'Microsoft', 'Apple'].map((company, i) => (
+              <span
+                key={company}
+                className="text-lg font-bold text-slate-300 hover:text-slate-600 transition-colors cursor-default"
+              >
+                {company}
+              </span>
+            ))}
           </div>
         </div>
       </div>
