@@ -33,7 +33,7 @@ The project is built using a modern Next.js stack focused on performance and dev
 ### Backend & Data
 - **API**: Next.js Server Components & API Routes.
 - **Database ORM**: [Prisma](https://www.prisma.io/).
-- **AI Engine**: Google Gemini (via `@google/generative-ai`) for semantic analysis.
+- **AI Engine**: Hugging Face Inference API (via `Qwen/Qwen2.5-7B-Instruct`).
 - **File Parsing**: `pdf-parse` for PDF extraction.
 
 ## 🛠️ Getting Started
@@ -61,7 +61,8 @@ The project is built using a modern Next.js stack focused on performance and dev
    DATABASE_URL="postgresql://user:password@localhost:5432/resume_db"
    NEXTAUTH_SECRET="your_nextauth_secret"
    NEXTAUTH_URL="http://localhost:3000"
-   GEMINI_API_KEY="your_google_gemini_api_key"
+   HUGGINGFACE_API_KEY="your_hugging_face_api_key"
+   HUGGINGFACE_MODEL="Qwen/Qwen2.5-7B-Instruct"
    ```
 
 4. **Initialize Database**:
