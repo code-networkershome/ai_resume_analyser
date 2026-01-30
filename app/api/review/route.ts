@@ -1,19 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { runAtsChecks } from "@/lib/ats-checker";
-import {
-    generateCritiquePrompt,
-    generateSkillGapPrompt,
-    validateCritiqueResponse,
-    validateSkillGapResponse,
-    generateResponsibilityAlignmentPrompt,
-    generateFixSuggestionsPrompt,
-    validateResponsibilityAlignmentResponse,
-    validateFixSuggestionsResponse,
-} from "@/lib/prompts";
-import { getChatCompletion } from "@/lib/openai";
 import { countWords } from "@/lib/utils";
+import { analyzeResumeUniversal, convertToLegacyFormat } from "@/lib/universal-engine";
 
 export async function POST(req: NextRequest) {
     try {
@@ -30,7 +19,6 @@ export async function POST(req: NextRequest) {
             experienceLevel,
             jobTitle,
             jobDescription,
-            parsingInsights,
         } = body;
 
         if (!resumeText || !targetRole || !experienceLevel) {
@@ -42,55 +30,23 @@ export async function POST(req: NextRequest) {
 
         const startTime = Date.now();
 
-        // 1. Run Manual ATS Checks (deterministic)
-        const atsResult = runAtsChecks(resumeText, targetRole, experienceLevel, {
-            jobTitle,
-            jobDescription,
-            parsingInsights,
-        });
-
-        // 2. Run AI Critique
-        const critiquePrompt = generateCritiquePrompt(
-            resumeText,
-            targetRole,
-            experienceLevel
-        );
-        const aiCritiqueRaw = await getChatCompletion(critiquePrompt);
-        const aiCritique = validateCritiqueResponse(aiCritiqueRaw);
-
-        // 3. Run AI Skill Gap Analysis
-        const skillGapPrompt = generateSkillGapPrompt(
-            resumeText,
-            targetRole,
-            experienceLevel
-        );
-        const aiSkillGapRaw = await getChatCompletion(skillGapPrompt);
-        const aiSkillGap = validateSkillGapResponse(aiSkillGapRaw);
-
-        // 4. Responsibility Alignment (JD-aware if provided)
-        const responsibilityPrompt = generateResponsibilityAlignmentPrompt(
+        // ===========================================
+        // UNIVERSAL RESUME INTELLIGENCE ENGINE
+        // ===========================================
+        const universalAnalysis = await analyzeResumeUniversal(
             resumeText,
             targetRole,
             experienceLevel,
             jobTitle,
             jobDescription
         );
-        const responsibilityRaw = await getChatCompletion(responsibilityPrompt);
-        const responsibilityAnalysis =
-            validateResponsibilityAlignmentResponse(responsibilityRaw);
 
-        // 5. AI Fix Suggestions (local rewrites)
-        const fixesPrompt = generateFixSuggestionsPrompt(
-            resumeText,
-            targetRole,
-            experienceLevel
-        );
-        const fixesRaw = await getChatCompletion(fixesPrompt);
-        const fixes = validateFixSuggestionsResponse(fixesRaw);
+        // Convert to legacy format for backward compatibility
+        const legacyResult = convertToLegacyFormat(universalAnalysis);
 
         const duration = Date.now() - startTime;
 
-        // 4. Save to Database (Schema Aligned)
+        // Save to Database
         const resume = await prisma.resume.create({
             data: {
                 userId: userId,
@@ -104,32 +60,65 @@ export async function POST(req: NextRequest) {
                 resumeId: resume.id,
                 targetRole,
                 experienceLevel,
-                atsScore: atsResult.atsScore,
-                structuralIssues: atsResult.hardFailures as any,
-                contentIssues: atsResult.warnings as any,
-                aiCritique: aiCritique as any,
-                skillGaps: aiSkillGap as any,
-                finalVerdict: aiCritique.summaryVerdict,
+                atsScore: universalAnalysis.scores.composite.value,
+                structuralIssues: universalAnalysis.issues
+                    .filter(i => i.affectedScores.includes("atsReadability"))
+                    .map(i => i.description) as any,
+                contentIssues: universalAnalysis.issues
+                    .filter(i => !i.affectedScores.includes("atsReadability"))
+                    .map(i => i.description) as any,
+                aiCritique: {
+                    summaryVerdict: universalAnalysis.verdict.summary,
+                    primaryRejectionReasons: universalAnalysis.issues
+                        .filter(i => i.severity === "high-impact")
+                        .map(i => i.description),
+                    roleFitAssessment: universalAnalysis.seniorityAnalysis.explanation,
+                } as any,
+                skillGaps: {
+                    missingCoreSkills: universalAnalysis.alignment.gaps
+                        .filter(g => g.importance === "high")
+                        .map(g => g.expected),
+                    missingToolsAndTech: universalAnalysis.alignment.gaps
+                        .filter(g => g.importance === "medium")
+                        .map(g => g.expected),
+                } as any,
+                finalVerdict: `${universalAnalysis.verdict.competitivenessLevel >= 70 ? "PASS" : universalAnalysis.verdict.competitivenessLevel >= 50 ? "WEAK PASS" : "REJECT"}: ${universalAnalysis.verdict.summary}`,
                 atsBreakdown: {
                     scores: {
-                        ...atsResult.scores,
-                        responsibilityAlignment: responsibilityAnalysis.responsibilityCoverageScore,
+                        atsCompatibility: universalAnalysis.scores.atsReadability.value,
+                        parsingReliability: universalAnalysis.parsing.overallConfidence,
+                        roleExpectationMatch: universalAnalysis.scores.roleAlignment.value,
+                        skillEvidence: universalAnalysis.scores.evidenceStrength.value,
+                        responsibilityAlignment: universalAnalysis.scores.roleAlignment.value,
+                        recruiterShortlistingProbability: universalAnalysis.scores.composite.value,
                     },
-                    parsing: atsResult.parsing,
-                    sections: atsResult.sections,
-                    keywords: atsResult.keywords,
-                    bullets: atsResult.bullets,
-                    career: atsResult.career,
-                    verdict: atsResult.verdict,
-                    rejectionReasons: atsResult.rejectionReasons,
+                    parsing: {
+                        confidence: universalAnalysis.parsing.overallConfidence,
+                        warnings: universalAnalysis.parsing.warnings,
+                    },
+                    verdict: {
+                        summary: universalAnalysis.verdict.summary,
+                        tone: universalAnalysis.verdict.tone,
+                        competitivenessLevel: universalAnalysis.verdict.competitivenessLevel,
+                    },
+                    // Include full universal analysis
+                    universalAnalysis: universalAnalysis,
                 } as any,
-                responsibilityAnalysis: responsibilityAnalysis as any,
-                recommendations: fixes as any,
+                responsibilityAnalysis: {
+                    expectationsMet: universalAnalysis.roleReasoning.expectationsMet,
+                    expectationsDiffer: universalAnalysis.roleReasoning.expectationsDiffer,
+                    responsibilityCoverageScore: universalAnalysis.scores.roleAlignment.value,
+                } as any,
+                recommendations: {
+                    bulletFixes: universalAnalysis.suggestions.bulletRewrites,
+                    priorityFixList: universalAnalysis.roadmap.map(r => r.action),
+                    generalAdvice: universalAnalysis.suggestions.generalAdvice,
+                } as any,
                 processingTimeMs: duration,
             },
         });
 
-        // 5. Update Usage (Upsert to support new users)
+        // Update Usage
         await prisma.usage.upsert({
             where: { userId: userId },
             create: {

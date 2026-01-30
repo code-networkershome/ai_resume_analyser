@@ -610,6 +610,21 @@ function checkImpactMetrics(context: ATSCheckContext): CheckResult & {
         /improved\s+.*\s+by\s+\d+/i, // improvement metrics
         /\d+\s*(ms|seconds?|minutes?)/i, // performance metrics
         /\d+\s*(gb|tb|mb)/i, // data volumes
+        // NEW: Competition and ranking metrics
+        /top\s+\d+%/i, // "Top 3%"
+        /rank\s*\d+/i, // "Rank 221"
+        /\d+\/\d+/, // "221/7000"
+        /\d+[\d,]*\+?\s*teams?/i, // "7000+ teams"
+        /\d+[\d,]*\s*selected/i, // "3,000 selected"
+        // NEW: Score and accuracy metrics
+        /score\s*(of\s*)?[\d.]+/i, // "score of 45.29" or "score 95"
+        /accuracy\s*(of\s*)?[\d.]+/i, // "accuracy 95%"
+        /f1[\s-]*score/i, // "F1 score" or "F1-score"
+        /smape\s*[\d.]+/i, // "SMAPE 45.29"
+        /precision|recall|auc|roc/i, // ML metrics
+        // NEW: Academic metrics
+        /cgpa[:\s]*[\d.]+/i, // "CGPA: 8.84"
+        /gpa[:\s]*[\d.]+/i, // "GPA 3.9"
     ];
 
     let bulletsWithMetrics = 0;
@@ -658,7 +673,7 @@ function checkContactInfo(context: ATSCheckContext): CheckResult {
     }
 
     // Check for LinkedIn
-    const hasLinkedIn = /linkedin\\.com/i.test(context.resumeText);
+    const hasLinkedIn = /linkedin\.com/i.test(context.resumeText);
     if (!hasLinkedIn) {
         warnings.push(
             "Consider adding your LinkedIn profile URL for professional visibility."
@@ -666,7 +681,7 @@ function checkContactInfo(context: ATSCheckContext): CheckResult {
     }
 
     // Check for GitHub (for tech roles)
-    const hasGitHub = /github\\.com/i.test(context.resumeText);
+    const hasGitHub = /github\.com/i.test(context.resumeText);
     if (!hasGitHub) {
         warnings.push(
             "Consider adding your GitHub profile to showcase your code and projects."
@@ -680,26 +695,59 @@ function checkContactInfo(context: ATSCheckContext): CheckResult {
 // HELPER FUNCTIONS
 // ===========================================
 
-function extractBullets(text: string): string[] {
+/**
+ * Pre-process text to handle PDF extraction artifacts where bullet symbols
+ * appear on their own line, separate from the content.
+ */
+function preprocessBulletedText(text: string): string {
     const lines = text.split("\n");
+    const processed: string[] = [];
+    const standaloneBulletPattern = /^[-•*●▪◦○□■➢➣➤]$/;
+
+    for (let i = 0; i < lines.length; i++) {
+        const trimmed = lines[i].trim();
+
+        // Check if this line is JUST a bullet symbol
+        if (standaloneBulletPattern.test(trimmed)) {
+            // Look for next non-empty line to join with
+            let j = i + 1;
+            while (j < lines.length && !lines[j].trim()) {
+                j++;
+            }
+            if (j < lines.length && lines[j].trim()) {
+                processed.push(trimmed + " " + lines[j].trim());
+                i = j; // Skip the consumed line
+            }
+        } else {
+            processed.push(lines[i]);
+        }
+    }
+    return processed.join("\n");
+}
+
+function extractBullets(text: string): string[] {
+    // Pre-process to handle standalone bullet symbols
+    const processedText = preprocessBulletedText(text);
+    const lines = processedText.split("\n");
     const bullets: string[] = [];
 
-    const bulletPatterns = [
-        /^\s*[\W_]\s+/,         // Any non-word char followed by space (catch-all for bullets)
-        /^\s*[-•*●▪◦○□■➢➣➤]/,  // Specific symbols without mandatory space
-        /^\s*\d+[.)] \s*/,      // Numbered lists
-        /^\s*[a-z][.)] \s*/i,   // Lettered lists
-        /^.{1,2}\s+/,           // Any 1-2 chars followed by space (extreme fallback)
+    // Pattern to match lines starting with bullet symbols
+    const bulletStartPatterns = [
+        /^[-•*●▪◦○□■➢➣➤]\s*/,      // Common bullet symbols
+        /^\d+[.)]\s+/,              // Numbered lists: "1. " or "1) "
+        /^[a-z][.)]\s+/i,           // Lettered lists: "a. " or "a) "
     ];
 
     for (const line of lines) {
         const trimmed = line.trim();
         if (trimmed.length === 0) continue;
 
-        for (const pattern of bulletPatterns) {
-            if (pattern.test(trimmed) || trimmed.startsWith("•") || trimmed.startsWith("-")) {
+        // Check if line starts with a bullet pattern
+        for (const pattern of bulletStartPatterns) {
+            if (pattern.test(trimmed)) {
                 const content = trimmed.replace(pattern, "").trim();
-                if (content.length > 10) {
+                // Only include if content is substantial
+                if (content.length > 15) {
                     bullets.push(content);
                 }
                 break;
@@ -709,3 +757,4 @@ function extractBullets(text: string): string[] {
 
     return bullets;
 }
+
