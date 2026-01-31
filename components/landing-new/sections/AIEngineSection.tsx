@@ -58,8 +58,8 @@ export function AIEngineSection() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {[
-              { label: "Language Model", value: "GPT-4o Premium", icon: Sparkles, color: "icon-glow-amber" },
-              { label: "Processing Speed", value: "< 2 Seconds", icon: Zap, color: "icon-glow-blue" },
+              { label: "Language Model", value: "Gemini 2.0 Flash (Premium)", icon: Sparkles, color: "icon-glow-amber" },
+              { label: "Processing Speed", value: "< 30 Seconds", icon: Zap, color: "icon-glow-blue" },
               { label: "Privacy Focus", value: "Fully Encrypted", icon: ShieldCheck, color: "icon-glow-emerald" }
             ].map((stat, i) => (
               <div key={i} className="p-10 rounded-[2rem] bg-white border border-slate-100 hover:border-blue-100 hover:shadow-2xl hover:shadow-blue-500/5 transition-all group">

@@ -2,15 +2,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, X, LayoutDashboard, FileText, LogOut, PlusCircle } from 'lucide-react';
+import { Menu, X, LayoutDashboard, FileText, LogOut, PlusCircle, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 export function AppNavbar() {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const pathname = usePathname();
+    const { data: session } = useSession();
+    const isAdmin = session?.user?.email === 'vikas@networkershome.com';
 
     useEffect(() => {
         const handleScroll = () => {
@@ -63,6 +65,18 @@ export function AppNavbar() {
 
                 {/* CTA Buttons / Profile */}
                 <div className="hidden md:flex items-center gap-4">
+                    {isAdmin && (
+                        <Link href="/admin">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-accent-blue border-accent-blue hover:bg-accent-blue/10 flex items-center gap-2"
+                            >
+                                <Shield className="w-4 h-4" />
+                                Admin Dashboard
+                            </Button>
+                        </Link>
+                    )}
                     <Button
                         variant="ghost"
                         size="sm"
@@ -116,6 +130,16 @@ export function AppNavbar() {
                                 {link.name}
                             </Link>
                         ))}
+                        {isAdmin && (
+                            <Link
+                                href="/admin"
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="text-sm font-medium flex items-center gap-3 p-2 rounded-lg text-accent-blue bg-accent-light"
+                            >
+                                <Shield className="w-5 h-5" />
+                                Admin Dashboard
+                            </Link>
+                        )}
                         <div className="pt-4 border-t border-gray-100">
                             <Button
                                 variant="ghost"

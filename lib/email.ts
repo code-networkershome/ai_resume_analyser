@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { logToDebug } from './logger';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -12,6 +13,7 @@ interface ReportEmailData {
     reportUrl: string;
     keyIssues?: string[];
     topPriorities?: string[];
+    pdfBuffer?: Buffer | string;
 }
 
 function escapeHtml(unsafe: string): string {
@@ -34,6 +36,7 @@ export async function sendReportEmail(data: ReportEmailData) {
         reportUrl,
         keyIssues = [],
         topPriorities = [],
+        pdfBuffer,
     } = data;
 
     const fromEmail = process.env.RESEND_FROM_EMAIL || 'team@mail.networkershome.com';
@@ -153,22 +156,36 @@ export async function sendReportEmail(data: ReportEmailData) {
     `;
 
     try {
-        const { data, error } = await resend.emails.send({
+        const emailRequest: any = {
             from: `${appName} <${fromEmail}>`,
             to: userEmail,
             subject: `📊 Your Resume Analysis: ${atsScore}/100 for ${targetRole}`,
             html: emailHtml,
-        });
+        };
+
+        if (pdfBuffer) {
+            const buffer = Buffer.isBuffer(pdfBuffer) ? pdfBuffer : Buffer.from(pdfBuffer as any);
+            logToDebug(`[Email Service] 📎 Attachment found. Final size: ${buffer.length} bytes`);
+
+            emailRequest.attachments = [
+                {
+                    content: buffer,
+                    filename: `Resume_Audit_${targetRole.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`,
+                }
+            ];
+        }
+
+        const { data: resendData, error } = await resend.emails.send(emailRequest);
 
         if (error) {
-            console.error('[Resend] Email send error:', error);
+            logToDebug('[Resend] ❌ API Error Details:', error);
             return { success: false, error };
         }
 
-        console.log('[Resend] Email sent successfully:', data?.id);
-        return { success: true, id: data?.id };
+        logToDebug('[Resend] Email sent successfully:', resendData?.id);
+        return { success: true, id: resendData?.id };
     } catch (error) {
-        console.error('[Resend] Failed to send email:', error);
+        logToDebug('[Resend] Failed to send email:', error);
         return { success: false, error };
     }
 }

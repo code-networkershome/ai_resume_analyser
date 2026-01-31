@@ -52,7 +52,11 @@ export function SignInForm({ callbackUrl }: SignInFormProps) {
                     setError("Something went wrong. Please try again.");
                 }
             } else {
-                router.push(callbackUrl || "/dashboard");
+                // CUSTOM ADMIN REDIRECT: Redirect Vikas to landing page, others to dashboard
+                const isAdmin = email.toLowerCase().trim() === 'vikas@networkershome.com';
+                const redirectPath = isAdmin ? "/" : (callbackUrl || "/dashboard");
+
+                router.push(redirectPath);
                 router.refresh();
             }
         } catch (err) {

@@ -110,7 +110,7 @@ export function HeroSection() {
               ) : (
                 <Link href="/review">
                   <Button className="btn-primary h-14 px-10 rounded-2xl flex items-center gap-2 text-base shadow-2xl shadow-blue-500/20">
-                    Build Your Resume
+                    Analyse Your Resume Now
                     <ArrowRight className="w-5 h-5" />
                   </Button>
                 </Link>

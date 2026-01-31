@@ -4,12 +4,15 @@ import { prisma } from "@/lib/prisma";
 import { countWords } from "@/lib/utils";
 import { analyzeResumeUniversal, convertToLegacyFormat } from "@/lib/universal-engine";
 import { sendReportEmail } from "@/lib/email";
+import { generateReportPDF } from "@/lib/pdf-generator";
 import { logAudit } from "@/lib/audit";
+import { logToDebug } from "@/lib/logger";
 
 // Configure max duration for Vercel/Next.js (60 seconds for Hobby, 300 for Pro)
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 export async function POST(req: NextRequest) {
+    logToDebug("🚩 [Review API] STARTING ANALYSIS REQUEST");
     try {
         const session = await auth();
         if (!session?.user?.id) {
@@ -172,6 +175,11 @@ export async function POST(req: NextRequest) {
 
                 // CRITICAL FIX: Await to ensure delivery in serverless environment
                 try {
+                    logToDebug("🚀 STARTING PDF GENERATION with Api2Pdf...");
+                    const pdfBuffer = await generateReportPDF(universalAnalysis, targetRole);
+                    logToDebug(`✅ PDF GENERATED SUCCESSFULLY. Buffer size: ${pdfBuffer.length} bytes`);
+
+                    logToDebug(`📧 SENDING EMAIL via Resend to: ${userEmail}`);
                     const result = await sendReportEmail({
                         userEmail,
                         userName,
@@ -185,16 +193,16 @@ export async function POST(req: NextRequest) {
                             .slice(0, 5)
                             .map((i: any) => i.description) || [],
                         topPriorities: universalAnalysis.roadmap?.slice(0, 5).map((r: any) => r.action) || [],
+                        pdfBuffer, // Attach the PDF!
                     });
 
                     if (result.success) {
-                        console.log(`[Review API] Report email sent successfully to ${userEmail}`);
+                        logToDebug(`✨ EMAIL SENT SUCCESSFULLY! ID: ${result.id}`);
                     } else {
-                        console.error(`[Review API] Failed to send report email:`, result.error);
+                        logToDebug(`❌ EMAIL FAILED:`, result.error);
                     }
-                } catch (emailError) {
-                    console.error(`[Review API] CRITICAL EMAIL FAILURE:`, emailError);
-                    // Don't fail the request, but log clearly
+                } catch (emailError: any) {
+                    logToDebug(`🛑 CRITICAL FAILURE in PDF/Email Flow:`, { message: emailError.message, stack: emailError.stack });
                 }
             }
 

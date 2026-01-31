@@ -398,9 +398,6 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                             >
                                 <Download className="mr-3 h-4 w-4" /> {isExporting ? 'Processing...' : 'Download PDF'}
                             </Button>
-                            <Button variant="outline" className="h-14 rounded-2xl border-slate-200 text-slate-600 hover:bg-white hover:border-slate-300 font-black text-xs uppercase tracking-widest px-8 transition-all">
-                                <Share2 className="mr-3 h-4 w-4" /> Share Report
-                            </Button>
                         </div>
                     </div>
                 </div>
