@@ -8,6 +8,8 @@ import { AlertCircle, CheckCircle2, XCircle, Info, ChevronRight, BarChart3, Tren
 import { cn, getScoreColor, getScoreBgColor, getScoreLabel, formatDate } from "@/lib/utils";
 
 import { InteractiveReport } from "@/components/review/interactive-report";
+import { Navigation } from "@/components/landing-new/navigation";
+import { Footer } from "@/components/landing-new/footer";
 
 export default async function ReviewReportPage({
     params,
@@ -43,8 +45,14 @@ export default async function ReviewReportPage({
     };
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <InteractiveReport review={reviewData} />
+        <div className="relative min-h-screen bg-gradient-to-b from-[#F8FAFF] via-white to-slate-50">
+            <Navigation />
+            <main className="relative pt-24 pb-20">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <InteractiveReport review={reviewData} />
+                </div>
+            </main>
+            <Footer />
         </div>
     );
 }

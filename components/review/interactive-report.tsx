@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { gsap } from "gsap";
 import {
     Radar,
     RadarChart,
@@ -48,7 +49,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
     const [isExporting, setIsExporting] = useState(false);
     const [activeTab, setActiveTab] = useState("overview");
 
-    // Refs for each section
+    const containerRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
     const overviewRef = useRef<HTMLDivElement>(null);
     const analysisRef = useRef<HTMLDivElement>(null);
@@ -59,6 +60,22 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
 
     useEffect(() => {
         setIsMounted(true);
+        
+        const ctx = gsap.context(() => {
+            gsap.fromTo(
+                ".animate-item",
+                { y: 30, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    stagger: 0.05,
+                    duration: 0.8,
+                    ease: "power3.out"
+                }
+            );
+        }, containerRef);
+
+        return () => ctx.revert();
     }, []);
 
     if (!isMounted) return null;
@@ -384,9 +401,9 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
     };
 
     return (
-        <div className="flex flex-col space-y-8 pb-20">
+        <div ref={containerRef} className="flex flex-col space-y-8 pb-20">
             {/* Header Section */}
-            <div ref={headerRef} className="bg-white p-1 rounded-[2.5rem] shadow-2xl shadow-blue-500/5 border border-blue-50">
+            <div ref={headerRef} className="animate-item bg-white p-1 rounded-[2.5rem] shadow-2xl shadow-blue-500/5 border border-blue-50">
                 <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-6 p-6">
                     <div className="flex-1 space-y-4 px-2">
                         <div className="flex flex-wrap items-center gap-3">
@@ -431,7 +448,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
             </div>
 
             <Tabs defaultValue="overview" className="space-y-8">
-                <div className="flex justify-center -mt-4 relative z-10">
+                <div className="flex justify-center -mt-4 relative z-10 animate-item">
                     <TabsList className="bg-white/80 backdrop-blur-xl p-1.5 rounded-3xl shadow-xl shadow-blue-500/10 border border-white/50 h-16 w-full max-w-2xl">
                         {[
                             { value: "overview", icon: <TrendingUp className="w-4 h-4" />, label: "Overview" },
@@ -453,7 +470,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
 
                 <TabsContent value="overview" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div ref={overviewRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-4">
-                        <Card className="premium-card p-5">
+                        <Card className="animate-item premium-card p-5">
                             <CardHeader className="pb-4 p-0">
                                 <div className="flex items-center gap-3 mb-3">
                                     <div className="h-10 w-10 premium-icon-bg icon-glow-blue">
@@ -469,7 +486,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                             </CardContent>
                         </Card>
 
-                        <Card className="premium-card p-5">
+                        <Card className="animate-item premium-card p-5">
                             <CardHeader className="pb-4 p-0">
                                 <div className="flex items-center gap-3 mb-3">
                                     <div className="h-10 w-10 premium-icon-bg icon-glow-purple">
@@ -502,7 +519,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                             </CardContent>
                         </Card>
 
-                        <Card className="premium-card p-5">
+                        <Card className="animate-item premium-card p-5">
                             <CardHeader className="pb-4 p-0">
                                 <div className="flex items-center gap-3 mb-3">
                                     <div className="h-10 w-10 premium-icon-bg icon-glow-emerald">
@@ -536,7 +553,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div ref={radarChartRef}>
+                        <div ref={radarChartRef} className="animate-item">
                             <Card className="premium-card p-5">
                                 <CardHeader className="pb-4 p-0">
                                     <div className="flex items-center gap-3">
@@ -567,7 +584,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                             </Card>
                         </div>
 
-                        <Card className="premium-card p-5">
+                        <Card className="animate-item premium-card p-5">
                             <CardHeader className="pb-4 p-0">
                                 <div className="flex items-center gap-3">
                                     <div className="h-10 w-10 premium-icon-bg icon-glow-rose">
@@ -655,7 +672,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                                                 reason: atsBreakdown?.universalAnalysis?.scores?.composite?.interpretation || "Overall competitiveness score"
                                             },
                                         ].map((item, i) => (
-                                            <div key={i} className="p-4 rounded-xl bg-gradient-to-r from-gray-50/50 to-white border border-gray-100 hover:border-blue-200 hover:shadow-lg transition-all duration-300">
+                                            <div key={i} className="animate-item p-4 rounded-xl bg-gradient-to-r from-gray-50/50 to-white border border-gray-100 hover:border-blue-200 hover:shadow-lg transition-all duration-300">
                                                 <div className="flex justify-between items-end mb-3">
                                                     <span className="text-xs font-black text-text-secondary uppercase tracking-widest">{item.label}</span>
                                                     <span className={`text-2xl font-black font-mono ${item.val >= 70 ? 'text-emerald-600' : item.val >= 50 ? 'text-amber-600' : 'text-red-600'}`}>{item.val}%</span>
@@ -674,7 +691,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
 
                                     {/* AI Insight Card */}
                                     <div className="space-y-6">
-                                        <div className="bg-gradient-to-br from-accent-blue to-blue-700 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-2xl shadow-blue-500/20 group">
+                                        <div className="animate-item bg-gradient-to-br from-accent-blue to-blue-700 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-2xl shadow-blue-500/20 group">
                                             <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:scale-110 transition-transform duration-700">
                                                 <Brain className="h-40 w-40" />
                                             </div>
@@ -688,7 +705,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                                         </div>
 
                                         {/* Score Factors - Premium Styled */}
-                                        <div className="premium-card p-6">
+                                        <div className="animate-item premium-card p-6">
                                             <div className="flex items-center gap-3 mb-5">
                                                 <div className="h-10 w-10 premium-icon-bg icon-glow-purple">
                                                     <TrendingUp className="h-5 w-5" />
@@ -738,7 +755,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
 
                 <TabsContent value="skills" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div ref={skillsRef} className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <Card className="premium-card p-6">
+                        <Card className="animate-item premium-card p-6">
                             <div className="flex items-center gap-4 mb-8">
                                 <div className="h-14 w-14 premium-icon-bg icon-glow-rose">
                                     <Target className="h-7 w-7" />
@@ -829,7 +846,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                             </CardContent>
                         </Card>
 
-                        <Card className="premium-card p-6">
+                        <Card className="animate-item premium-card p-6">
                             <div className="flex items-center gap-4 mb-8">
                                 <div className="h-14 w-14 premium-icon-bg icon-glow-amber">
                                     <Zap className="h-7 w-7" />
@@ -882,7 +899,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                         </Card>
 
 
-                        <Card className="md:col-span-2 premium-card p-6">
+                        <Card className="animate-item md:col-span-2 premium-card p-6">
                             <div className="flex items-center gap-4 mb-8">
                                 <div className="h-14 w-14 premium-icon-bg icon-glow-blue">
                                     <Briefcase className="h-7 w-7" />
@@ -949,7 +966,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
 
                 <TabsContent value="formatting" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div ref={formattingRef} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <Card className="premium-card p-6">
+                        <Card className="animate-item premium-card p-6">
                             <div className="flex items-center gap-4 mb-8">
                                 <div className="h-14 w-14 premium-icon-bg icon-glow-rose">
                                     <AlertTriangle className="h-7 w-7" />
@@ -1032,7 +1049,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                             </CardContent>
                         </Card>
 
-                        <Card className="premium-card p-6">
+                        <Card className="animate-item premium-card p-6">
                             <div className="flex items-center gap-4 mb-8">
                                 <div className="h-14 w-14 premium-icon-bg icon-glow-purple">
                                     <Lightbulb className="h-7 w-7" />
@@ -1120,7 +1137,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
 
                             <CardContent className="p-8 space-y-8">
                                 {recommendations?.bulletFixes?.slice(0, 4).map((fix: any, i: number) => (
-                                    <div key={i} className="flex flex-col md:flex-row gap-0 rounded-[2rem] bg-white border border-gray-100 overflow-hidden shadow-lg shadow-gray-200/50 group/opt hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300">
+                                    <div key={i} className="animate-item flex flex-col md:flex-row gap-0 rounded-[2rem] bg-white border border-gray-100 overflow-hidden shadow-lg shadow-gray-200/50 group/opt hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300">
                                         <div className="flex-1 p-8 space-y-4 bg-gray-50/50 relative overflow-hidden">
                                             <div className="absolute top-0 right-0 p-4 opacity-[0.03]">
                                                 <FileText className="h-40 w-40 -mr-10 -mt-10 rotate-12" />
@@ -1182,7 +1199,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                             </CardContent>
                         </Card>
 
-                        <Card className="shadow-2xl shadow-blue-500/5 border-none bg-white overflow-hidden p-2">
+                        <Card className="animate-item shadow-2xl shadow-blue-500/5 border-none bg-white overflow-hidden p-2">
                             <div className="p-8 border-b border-gray-50">
                                 <h3 className="text-xl font-black text-text-primary">Priority Roadmap</h3>
                                 <p className="text-xs font-bold text-text-secondary uppercase tracking-widest mt-2">Next steps for maximum impact</p>
