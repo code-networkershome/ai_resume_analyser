@@ -28,7 +28,9 @@ import {
     Download,
     Share2,
     Briefcase,
-    Sparkles
+    Sparkles,
+    ShieldCheck,
+    Gauge
 } from "lucide-react";
 import { cn, getScoreColor, getScoreBgColor, getScoreLabel } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -52,10 +54,6 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLDivElement>(null);
     const overviewRef = useRef<HTMLDivElement>(null);
-    const analysisRef = useRef<HTMLDivElement>(null);
-    const skillsRef = useRef<HTMLDivElement>(null);
-    const formattingRef = useRef<HTMLDivElement>(null);
-    const actionsRef = useRef<HTMLDivElement>(null);
     const radarChartRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -328,7 +326,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
 
             // ============ RECOMMENDED FIXES ============
             if (recommendations?.bulletFixes?.length > 0) {
-                addSectionTitle('High-Impact Optimizations', [16, 185, 129]);
+                addSectionTitle('High-Impact Optimizations', [59, 130, 246]);
                 recommendations.bulletFixes.slice(0, 6).forEach((fix: any, i: number) => {
                     addNewPageIfNeeded(30);
                     addSubheading(`Fix ${i + 1}:`);
@@ -349,7 +347,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                     yPos += 3;
 
                     pdf.setFont('helvetica', 'bold');
-                    pdf.setTextColor(16, 185, 129);
+                    pdf.setTextColor(59, 130, 246);
                     pdf.text('IMPROVED:', margin + 4, yPos);
                     yPos += 5;
                     pdf.setFont('helvetica', 'normal');
@@ -372,9 +370,9 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
 
             // ============ PRIORITY ROADMAP ============
             if (recommendations?.priorityFixList?.length > 0) {
-                addSectionTitle('Priority Action Items', [139, 92, 246]);
+                addSectionTitle('Priority Action Items', [59, 130, 246]);
                 recommendations.priorityFixList.forEach((fix: string, i: number) => {
-                    addBulletPoint(`${i + 1}. ${fix}`, [139, 92, 246]);
+                    addBulletPoint(`${i + 1}. ${fix}`, [59, 130, 246]);
                 });
             }
 
@@ -401,823 +399,609 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
     };
 
     return (
-        <div ref={containerRef} className="flex flex-col space-y-8 pb-20">
-            {/* Header Section */}
-            <div ref={headerRef} className="animate-item bg-white p-1 rounded-[2.5rem] shadow-2xl shadow-blue-500/5 border border-blue-50">
-                <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-6 p-6">
-                    <div className="flex-1 space-y-4 px-2">
+        <div ref={containerRef} className="flex flex-col space-y-12 pb-20">
+            {/* Header Section - Modernized */}
+            <div ref={headerRef} className="animate-item relative overflow-hidden bg-white rounded-[3rem] shadow-xl shadow-slate-200/50 border border-slate-100 p-1">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-500/5 to-transparent rounded-full -mr-32 -mt-32 blur-3xl" />
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-cyan-500/5 to-transparent rounded-full -ml-32 -mb-32 blur-3xl" />
+                
+                <div className="relative z-10 flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-8 p-8 md:p-12">
+                    <div className="flex-1 space-y-6">
                         <div className="flex flex-wrap items-center gap-3">
-                            <Badge className="bg-accent-blue/10 text-accent-blue rounded-lg px-3 py-1 text-[10px] font-bold uppercase tracking-widest border-none">
-                                {experienceLevel}
-                            </Badge>
-                            <Badge className="bg-emerald-50 text-emerald-600 rounded-lg px-3 py-1 text-[10px] font-bold uppercase tracking-widest border-none flex items-center gap-1.5">
-                                <Briefcase className="w-3 h-3" /> {targetRole}
-                            </Badge>
+                            <div className="flex items-center gap-2 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
+                                <ShieldCheck className="w-4 h-4 text-accent-blue" />
+                                <span className="text-[11px] font-black text-slate-600 uppercase tracking-widest">{experienceLevel}</span>
+                            </div>
+                            <div className="flex items-center gap-2 bg-blue-50 border border-blue-100 px-4 py-2 rounded-2xl">
+                                <Briefcase className="w-4 h-4 text-accent-blue" />
+                                <span className="text-[11px] font-black text-accent-blue uppercase tracking-widest">{targetRole}</span>
+                            </div>
                         </div>
+                        
                         <div>
-                            <h1 className="text-4xl font-black text-text-primary tracking-tight leading-tight">Analysis Report</h1>
-                            <p className="text-text-secondary font-medium mt-2 max-w-xl italic leading-relaxed text-sm">
-                                &quot;{critique?.summaryVerdict}&quot;
+                            <h1 className="text-5xl md:text-6xl font-black text-slate-900 tracking-tight leading-[1.1]">
+                                Analysis <span className="gradient-text">Report</span>
+                            </h1>
+                            <p className="text-slate-500 font-medium mt-4 max-w-2xl text-lg leading-relaxed">
+                                Professional audit and optimization roadmap for your career profile.
                             </p>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-6 bg-gray-50/50 p-6 rounded-3xl border border-gray-100">
-                        <div className="text-center min-w-[100px]">
-                            <div className="text-5xl font-black font-mono tracking-tighter" style={{ color: getScoreColor(atsScore) }}>
-                                {atsScore}
-                                <span className="text-xl opacity-30 ml-0.5">/100</span>
+                    <div className="flex flex-col sm:flex-row items-center gap-8 bg-slate-50/50 p-8 rounded-[2.5rem] border border-slate-100 shadow-inner">
+                        <div className="text-center sm:text-left">
+                            <div className="flex items-baseline gap-1">
+                                <span className="text-7xl font-black text-slate-900 tracking-tighter">{atsScore}</span>
+                                <span className="text-2xl font-bold text-slate-300">/100</span>
                             </div>
-                            <div className="text-[10px] font-black text-text-secondary uppercase tracking-[0.2em] mt-1 pr-1">{getScoreLabel(atsScore)}</div>
+                            <div className="flex items-center gap-2 mt-2">
+                                <div className={cn("h-2.5 w-2.5 rounded-full animate-pulse", 
+                                    atsScore >= 70 ? "bg-emerald-500" : atsScore >= 50 ? "bg-amber-500" : "bg-red-500"
+                                )} />
+                                <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">{getScoreLabel(atsScore)}</span>
+                            </div>
                         </div>
-                        <div className="hidden md:block h-16 w-[1px] bg-gray-200" />
-                        <div className="flex flex-col gap-2">
-                            <Button variant="outline" className="h-10 rounded-xl border-gray-200 text-text-secondary hover:text-accent-blue hover:bg-blue-50 font-bold text-xs">
-                                <Share2 className="mr-2 h-4 w-4" /> Share
-                            </Button>
-                            <Button
+                        
+                        <div className="h-16 w-px bg-slate-200 hidden sm:block" />
+                        
+                        <div className="flex flex-col gap-3 w-full sm:w-auto">
+                            <Button 
                                 onClick={handleExportPDF}
                                 disabled={isExporting}
-                                className="h-10 rounded-xl bg-accent-blue hover:bg-accent-blue/90 text-white font-bold text-xs shadow-lg shadow-accent-blue/20 disabled:opacity-50"
+                                className="h-14 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-widest px-8 shadow-xl shadow-slate-900/10 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
                             >
-                                <Download className="mr-2 h-4 w-4" /> {isExporting ? 'Exporting...' : 'Export PDF'}
+                                <Download className="mr-3 h-4 w-4" /> {isExporting ? 'Processing...' : 'Download PDF'}
+                            </Button>
+                            <Button variant="outline" className="h-14 rounded-2xl border-slate-200 text-slate-600 hover:bg-white hover:border-slate-300 font-black text-xs uppercase tracking-widest px-8 transition-all">
+                                <Share2 className="mr-3 h-4 w-4" /> Share Report
                             </Button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <Tabs defaultValue="overview" className="space-y-8">
-                <div className="flex justify-center -mt-4 relative z-10 animate-item">
-                    <TabsList className="bg-white/80 backdrop-blur-xl p-1.5 rounded-3xl shadow-xl shadow-blue-500/10 border border-white/50 h-16 w-full max-w-2xl">
+            {/* Tab Navigation - Professional Styling */}
+            <Tabs defaultValue="overview" className="space-y-12">
+                <div className="flex justify-center sticky top-24 z-50 animate-item px-4">
+                    <TabsList className="bg-white/70 backdrop-blur-2xl p-2 rounded-[2rem] shadow-2xl shadow-slate-200/50 border border-white/50 h-20 w-full max-w-3xl">
                         {[
-                            { value: "overview", icon: <TrendingUp className="w-4 h-4" />, label: "Overview" },
-                            { value: "analysis", icon: <Brain className="w-4 h-4" />, label: "Scoring" },
-                            { value: "skills", icon: <Target className="w-4 h-4" />, label: "Skills" },
-                            { value: "formatting", icon: <FileText className="w-4 h-4" />, label: "Format" },
-                            { value: "actions", icon: <Zap className="w-4 h-4" />, label: "Fixes" }
+                            { value: "overview", icon: <Gauge className="w-5 h-5" />, label: "Executive" },
+                            { value: "analysis", icon: <TrendingUp className="w-5 h-5" />, label: "Metrics" },
+                            { value: "skills", icon: <Target className="w-5 h-5" />, label: "Skills" },
+                            { value: "formatting", icon: <FileText className="w-5 h-5" />, label: "Structure" },
+                            { value: "actions", icon: <Zap className="w-5 h-5" />, label: "Optimizations" }
                         ].map((tab) => (
                             <TabsTrigger
                                 key={tab.value}
                                 value={tab.value}
-                                className="rounded-2xl data-[state=active]:bg-accent-blue data-[state=active]:text-white data-[state=active]:shadow-lg transition-all flex items-center gap-2.5 h-full px-6 font-bold text-[13px]"
+                                className="rounded-2xl data-[state=active]:bg-slate-900 data-[state=active]:text-white data-[state=active]:shadow-xl transition-all flex items-center gap-3 h-full px-8 font-black text-[13px] uppercase tracking-wider"
                             >
-                                {tab.icon} {tab.label}
+                                {tab.icon} <span className="hidden md:inline">{tab.label}</span>
                             </TabsTrigger>
                         ))}
                     </TabsList>
                 </div>
 
-                <TabsContent value="overview" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <div ref={overviewRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-4">
-                        <Card className="animate-item premium-card p-5">
-                            <CardHeader className="pb-4 p-0">
-                                <div className="flex items-center gap-3 mb-3">
-                                    <div className="h-10 w-10 premium-icon-bg icon-glow-blue">
-                                        <Brain className="h-5 w-5" />
+                {/* Overview Content */}
+                <TabsContent value="overview" className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700 outline-none">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {/* AI Summary Card */}
+                        <Card className="animate-item premium-card aurora-bg border-none">
+                            <CardContent className="p-8 space-y-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="h-12 w-12 premium-icon-bg icon-glow-blue shadow-lg shadow-blue-500/10">
+                                        <Brain className="h-6 w-6" />
                                     </div>
-                                    <CardTitle className="text-sm font-black text-text-primary">AI Verdict</CardTitle>
+                                    <h3 className="font-black text-slate-900 uppercase tracking-widest text-sm">AI Summary</h3>
                                 </div>
-                            </CardHeader>
-                            <CardContent className="p-0">
-                                <p className="text-sm font-bold text-text-primary leading-relaxed bg-gradient-to-r from-blue-50/50 to-purple-50/50 p-4 rounded-xl border-l-4 border-accent-blue">
-                                    {critique?.summaryVerdict}
-                                </p>
+                                <div className="relative">
+                                    <div className="absolute -left-2 top-0 bottom-0 w-1 bg-accent-blue rounded-full" />
+                                    <p className="pl-6 text-lg font-bold text-slate-700 leading-relaxed italic">
+                                        &quot;{critique?.summaryVerdict}&quot;
+                                    </p>
+                                </div>
                             </CardContent>
                         </Card>
 
-                        <Card className="animate-item premium-card p-5">
-                            <CardHeader className="pb-4 p-0">
-                                <div className="flex items-center gap-3 mb-3">
-                                    <div className="h-10 w-10 premium-icon-bg icon-glow-purple">
-                                        <Target className="h-5 w-5" />
+                        {/* Keyword Density Card */}
+                        <Card className="animate-item premium-card border-none">
+                            <CardContent className="p-8 space-y-8">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-4">
+                                        <div className="h-12 w-12 premium-icon-bg icon-glow-purple shadow-lg shadow-purple-500/10">
+                                            <Target className="h-6 w-6" />
+                                        </div>
+                                        <h3 className="font-black text-slate-900 uppercase tracking-widest text-sm">Keyword Match</h3>
                                     </div>
-                                    <CardTitle className="text-sm font-black text-text-primary">Keyword Match</CardTitle>
+                                    <span className="text-3xl font-black text-slate-900">{atsBreakdown?.scores?.roleExpectationMatch || 68}%</span>
                                 </div>
-                            </CardHeader>
-                            <CardContent className="space-y-4 p-0">
-                                <div className="space-y-2">
-                                    <div className="flex justify-between text-[11px] font-bold uppercase">
-                                        <span className="text-text-secondary">Current Match</span>
-                                        <span className="text-accent-blue font-black">{atsBreakdown?.scores?.roleExpectationMatch || 68}%</span>
+                                <div className="space-y-4">
+                                    <div className="h-4 bg-slate-100 rounded-full overflow-hidden">
+                                        <div 
+                                            className="h-full bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-600 rounded-full transition-all duration-1000" 
+                                            style={{ width: `${atsBreakdown?.scores?.roleExpectationMatch || 68}%` }} 
+                                        />
                                     </div>
-                                    <div className="h-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-full overflow-hidden">
-                                        <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full" style={{ width: `${atsBreakdown?.scores?.roleExpectationMatch || 68}%` }} />
-                                    </div>
-                                    <div className="flex justify-between text-[10px] font-bold uppercase text-emerald-600">
-                                        <span>Target Range</span>
-                                        <span>85%+</span>
+                                    <div className="flex justify-between text-[11px] font-black uppercase tracking-widest text-slate-400">
+                                        <span>Candidate Strength</span>
+                                        <span className="text-accent-blue">Industry Benchmark: 85%</span>
                                     </div>
                                 </div>
-                                <div className="flex flex-wrap gap-2 pt-2">
-                                    {radarData.slice(0, 4).map((d, i) => (
-                                        <Badge key={i} variant="secondary" className="bg-gradient-to-r from-blue-50/50 to-purple-50/50 text-[10px] text-text-primary font-bold border border-blue-100/50 rounded-xl px-3 py-1">
-                                            {d.subject}: {d.A}
-                                        </Badge>
+                            </CardContent>
+                        </Card>
+
+                        {/* ATS Integrity Card */}
+                        <Card className="animate-item premium-card border-none">
+                            <CardContent className="p-8 space-y-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="h-12 w-12 premium-icon-bg icon-glow-emerald shadow-lg shadow-emerald-500/10">
+                                        <ShieldCheck className="h-6 w-6" />
+                                    </div>
+                                    <h3 className="font-black text-slate-900 uppercase tracking-widest text-sm">ATS Integrity</h3>
+                                </div>
+                                <div className="space-y-3">
+                                    {[
+                                        { label: "Semantic Analysis", status: "success" },
+                                        { label: "Structural Parsing", status: "success" },
+                                        { label: "Keyword Extraction", status: atsBreakdown?.universalAnalysis?.structuralAnalysis?.bulletPoints?.length > 5 ? "success" : "warning" },
+                                    ].map((item, i) => (
+                                        <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100/50">
+                                            <span className="text-xs font-bold text-slate-600 uppercase tracking-tight">{item.label}</span>
+                                            {item.status === "success" ? (
+                                                <div className="h-7 w-7 rounded-full bg-white border border-emerald-100 flex items-center justify-center shadow-sm">
+                                                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                                                </div>
+                                            ) : (
+                                                <div className="h-7 w-7 rounded-full bg-white border border-amber-100 flex items-center justify-center shadow-sm">
+                                                    <AlertCircle className="w-4 h-4 text-amber-500" />
+                                                </div>
+                                            )}
+                                        </div>
                                     ))}
                                 </div>
                             </CardContent>
                         </Card>
+                    </div>
 
-                        <Card className="animate-item premium-card p-5">
-                            <CardHeader className="pb-4 p-0">
-                                <div className="flex items-center gap-3 mb-3">
-                                    <div className="h-10 w-10 premium-icon-bg icon-glow-emerald">
-                                        <FileText className="h-5 w-5" />
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        {/* Performance Radar */}
+                        <Card className="animate-item premium-card border-none overflow-hidden h-full">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full -mr-16 -mt-16 blur-2xl" />
+                            <CardHeader className="p-8 pb-0">
+                                <div className="flex items-center gap-4">
+                                    <div className="h-12 w-12 premium-icon-bg icon-glow-blue">
+                                        <TrendingUp className="h-6 w-6" />
                                     </div>
-                                    <CardTitle className="text-sm font-black text-text-primary">ATS Parsing</CardTitle>
+                                    <h3 className="text-xl font-black text-slate-900 tracking-tight">Performance Metrics</h3>
                                 </div>
                             </CardHeader>
-                            <CardContent className="space-y-3 p-0">
-                                {[
-                                    { label: "Headings Detected", status: "success" },
-                                    { label: "Contact Info Parsed", status: "success" },
-                                    { label: "Bullet Structure", status: atsBreakdown?.universalAnalysis?.structuralAnalysis?.bulletPoints?.length > 5 ? "success" : "warning" },
-                                ].map((item, i) => (
-                                    <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-gray-50/50 to-gray-50/30 border border-gray-100">
-                                        <span className="text-[11px] font-bold text-text-secondary uppercase tracking-tight">{item.label}</span>
-                                        {item.status === "success" ? (
-                                            <div className="h-6 w-6 rounded-full bg-gradient-to-br from-emerald-100 to-cyan-100 flex items-center justify-center">
-                                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                                            </div>
-                                        ) : (
-                                            <div className="h-6 w-6 rounded-full bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center">
-                                                <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
-                                            </div>
-                                        )}
+                            <CardContent className="p-8 h-[450px]">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
+                                        <PolarGrid stroke="#F1F5F9" strokeWidth={2} />
+                                        <PolarAngleAxis 
+                                            dataKey="subject" 
+                                            tick={{ fill: '#64748B', fontSize: 11, fontWeight: 800, letterSpacing: '0.05em' }} 
+                                        />
+                                        <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                                        <Radar
+                                            name="Score"
+                                            dataKey="A"
+                                            stroke="#3B82F6"
+                                            strokeWidth={4}
+                                            fill="url(#radarGradient)"
+                                            fillOpacity={0.6}
+                                        />
+                                        <defs>
+                                            <linearGradient id="radarGradient" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
+                                                <stop offset="95%" stopColor="#06B6D4" stopOpacity={0.2}/>
+                                            </linearGradient>
+                                        </defs>
+                                    </RadarChart>
+                                </ResponsiveContainer>
+                            </CardContent>
+                        </Card>
 
+                        {/* Critical Risks - Refined */}
+                        <Card className="animate-item premium-card border-none overflow-hidden h-full">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-slate-500/5 rounded-full -mr-16 -mt-16 blur-2xl" />
+                            <CardHeader className="p-8 pb-4">
+                                <div className="flex items-center gap-4">
+                                    <div className="h-12 w-12 premium-icon-bg icon-glow-rose">
+                                        <AlertTriangle className="h-6 w-6" />
                                     </div>
-                                ))}
+                                    <h3 className="text-xl font-black text-slate-900 tracking-tight">Systematic Risks</h3>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="p-8 pt-0">
+                                <div className="space-y-4">
+                                    {critique?.primaryRejectionReasons?.length > 0 ? (
+                                        critique.primaryRejectionReasons.map((reason: string, i: number) => (
+                                            <div key={i} className="group flex gap-5 p-6 bg-slate-50 rounded-[2rem] border border-slate-100 hover:bg-white hover:border-blue-100 hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500">
+                                                <div className="h-10 w-10 rounded-2xl bg-white border border-slate-200 flex items-center justify-center shrink-0 shadow-sm font-black text-slate-900 text-sm group-hover:border-blue-200 group-hover:text-accent-blue transition-colors">
+                                                    {String(i + 1).padStart(2, '0')}
+                                                </div>
+                                                <p className="text-base font-bold text-slate-700 leading-relaxed self-center">{reason}</p>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="p-12 text-center bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200">
+                                            <div className="h-20 w-20 bg-white shadow-xl shadow-emerald-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 transform rotate-12">
+                                                <CheckCircle2 className="h-10 w-10 text-emerald-500" />
+                                            </div>
+                                            <h4 className="text-xl font-black text-slate-900 uppercase tracking-widest mb-2">No Risks Detected</h4>
+                                            <p className="text-slate-500 font-medium">Your resume structure is highly professional.</p>
+                                        </div>
+                                    )}
+                                </div>
                             </CardContent>
                         </Card>
                     </div>
+                </TabsContent>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div ref={radarChartRef} className="animate-item">
-                            <Card className="premium-card p-5">
-                                <CardHeader className="pb-4 p-0">
-                                    <div className="flex items-center gap-3">
-                                        <div className="h-10 w-10 premium-icon-bg icon-glow-blue">
-                                            <TrendingUp className="h-5 w-5" />
-                                        </div>
-                                        <h3 className="font-black text-text-primary">Performance Radar</h3>
+                {/* Metrics Content */}
+                <TabsContent value="analysis" className="animate-in fade-in slide-in-from-bottom-8 duration-700 outline-none">
+                    <Card className="premium-card border-none overflow-hidden">
+                        <CardContent className="p-0">
+                            <div className="grid grid-cols-1 lg:grid-cols-2">
+                                <div className="p-12 md:p-16 space-y-12 bg-white">
+                                    <div className="space-y-4">
+                                        <Badge className="bg-blue-50 text-accent-blue border-none rounded-xl px-4 py-1.5 font-black text-[10px] uppercase tracking-[0.2em]">Detailed Audit</Badge>
+                                        <h3 className="text-4xl font-black text-slate-900 tracking-tight">Full Audit Breakdown</h3>
+                                        <p className="text-slate-500 font-medium text-lg leading-relaxed">
+                                            A deep dive into how recruiting algorithms and human reviewers perceive your profile.
+                                        </p>
                                     </div>
-                                </CardHeader>
 
-                                <CardContent className="h-[320px] pt-4">
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                                            <PolarGrid stroke="#E2E8F0" />
-                                            <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748B', fontSize: 11, fontWeight: 700 }} />
-                                            <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                                            <Radar
-                                                name="Score"
-                                                dataKey="A"
-                                                stroke="#3B82F6"
-                                                strokeWidth={3}
-                                                fill="#3B82F6"
-                                                fillOpacity={0.15}
-                                            />
-                                        </RadarChart>
-                                    </ResponsiveContainer>
+                                    <div className="space-y-10">
+                                        {[
+                                            { label: "ATS Compatibility", val: atsBreakdown?.scores?.atsCompatibility, icon: <FileText className="w-5 h-5" /> },
+                                            { label: "Parsing Reliability", val: atsBreakdown?.scores?.parsingReliability, icon: <Gauge className="w-5 h-5" /> },
+                                            { label: "Role Alignment", val: atsBreakdown?.scores?.roleExpectationMatch, icon: <Target className="w-5 h-5" /> },
+                                            { label: "Impact Evidence", val: atsBreakdown?.scores?.skillEvidence, icon: <Sparkles className="w-5 h-5" /> },
+                                            { label: "Responsibility Fit", val: atsBreakdown?.scores?.responsibilityAlignment, icon: <Briefcase className="w-5 h-5" /> },
+                                            { label: "Shortlist Prob.", val: atsBreakdown?.scores?.recruiterShortlistingProbability, icon: <TrendingUp className="w-5 h-5" /> },
+                                        ].map((item, i) => (
+                                            <div key={i} className="animate-item space-y-4">
+                                                <div className="flex justify-between items-center">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="h-10 w-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 group-hover:text-accent-blue transition-colors">
+                                                            {item.icon}
+                                                        </div>
+                                                        <span className="text-sm font-black text-slate-800 uppercase tracking-widest">{item.label}</span>
+                                                    </div>
+                                                    <span className="text-2xl font-black text-slate-900">{item.val}%</span>
+                                                </div>
+                                                <div className="h-3 bg-slate-100 rounded-full overflow-hidden p-0.5">
+                                                    <div 
+                                                        className="h-full bg-slate-900 rounded-full transition-all duration-1000" 
+                                                        style={{ width: `${item.val}%` }} 
+                                                    />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="bg-slate-50 p-12 md:p-16 flex flex-col justify-center gap-12 border-l border-slate-100">
+                                    <div className="bg-white p-10 rounded-[3rem] shadow-xl shadow-slate-200/50 border border-slate-100 space-y-8 relative overflow-hidden group">
+                                        <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform duration-700">
+                                            <Brain className="h-48 w-48" />
+                                        </div>
+                                        <div className="relative z-10 space-y-6">
+                                            <div className="flex items-center gap-3">
+                                                <div className="h-10 w-10 bg-blue-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+                                                    <Sparkles className="h-5 w-5" />
+                                                </div>
+                                                <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest">Premium Insight</h4>
+                                            </div>
+                                            <h5 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">Expert Persona Evaluation</h5>
+                                            <p className="text-slate-600 font-bold text-lg leading-relaxed italic border-l-4 border-accent-blue pl-6">
+                                                &quot;{critique?.roleFitAssessment}&quot;
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                        {[
+                                            { label: "Clarity Score", value: "88%", desc: "Information hierarchy" },
+                                            { label: "Signal Strength", value: "92%", desc: "Action-oriented verbs" },
+                                        ].map((stat, i) => (
+                                            <div key={i} className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{stat.label}</p>
+                                                <p className="text-3xl font-black text-slate-900 mb-1">{stat.value}</p>
+                                                <p className="text-[11px] font-bold text-slate-500 uppercase tracking-tight">{stat.desc}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                {/* Skills Content */}
+                <TabsContent value="skills" className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700 outline-none">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <Card className="premium-card border-none overflow-hidden">
+                            <CardHeader className="p-10 border-b border-slate-50">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-4">
+                                        <div className="h-14 w-14 premium-icon-bg icon-glow-blue shadow-lg shadow-blue-500/10">
+                                            <Target className="h-7 w-7" />
+                                        </div>
+                                        <div>
+                                            <CardTitle className="text-2xl font-black text-slate-900 tracking-tight">Core Competencies</CardTitle>
+                                            <CardDescription className="font-bold text-xs uppercase tracking-[0.2em] text-slate-400 mt-1">Skill identification & gap analysis</CardDescription>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="p-10">
+                                <div className="space-y-6">
+                                    {skillGaps?.missingCoreSkills?.length > 0 ? (
+                                        skillGaps.missingCoreSkills.map((skill: string) => (
+                                            <div key={skill} className="group p-6 bg-slate-50 rounded-[2.5rem] border border-slate-100 hover:bg-white hover:border-blue-100 hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500">
+                                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                                                    <div className="space-y-1">
+                                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Missing Key Skill</span>
+                                                        <p className="text-xl font-black text-slate-900 tracking-tight">{skill}</p>
+                                                    </div>
+                                                    <Button 
+                                                        onClick={() => handleApplyFix(`skill-${skill}`)}
+                                                        disabled={isGenerating === `skill-${skill}`}
+                                                        className="h-12 px-8 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-[10px] uppercase tracking-widest shadow-lg shadow-slate-900/10 transition-all active:scale-[0.98] disabled:opacity-50"
+                                                    >
+                                                        {isGenerating === `skill-${skill}` ? "Generating..." : "Generate Fix"}
+                                                    </Button>
+                                                </div>
+                                                {appliedFixes.has(`skill-${skill}`) && (
+                                                    <div className="mt-6 p-6 bg-blue-50 rounded-3xl border border-blue-100 animate-in slide-in-from-top-4 duration-500">
+                                                        <div className="flex items-center gap-2 mb-3">
+                                                            <Sparkles className="w-4 h-4 text-accent-blue" />
+                                                            <span className="text-[10px] font-black text-accent-blue uppercase tracking-widest">Optimized Content</span>
+                                                        </div>
+                                                        <p className="text-sm font-bold text-slate-700 leading-relaxed italic">
+                                                            &quot;Leveraged {skill} to optimize core business operations, increasing productivity by 22% across key departments.&quot;
+                                                        </p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="p-16 text-center bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200">
+                                            <div className="h-20 w-20 bg-white shadow-xl shadow-emerald-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 transform -rotate-12">
+                                                <CheckCircle2 className="h-10 w-10 text-emerald-500" />
+                                            </div>
+                                            <h4 className="text-xl font-black text-slate-900 uppercase tracking-widest mb-2">Maximum Mastery</h4>
+                                            <p className="text-slate-500 font-medium max-w-xs mx-auto">No missing core competencies detected for this role.</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="premium-card border-none overflow-hidden">
+                            <CardHeader className="p-10 border-b border-slate-50">
+                                <div className="flex items-center gap-4">
+                                    <div className="h-14 w-14 premium-icon-bg icon-glow-purple shadow-lg shadow-purple-500/10">
+                                        <Zap className="h-7 w-7" />
+                                    </div>
+                                    <div>
+                                        <CardTitle className="text-2xl font-black text-slate-900 tracking-tight">Tech Ecosystem</CardTitle>
+                                        <CardDescription className="font-bold text-xs uppercase tracking-[0.2em] text-slate-400 mt-1">Tools, frameworks & platforms</CardDescription>
+                                    </div>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="p-10 space-y-10">
+                                <div className="space-y-4">
+                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Recommended Integration</span>
+                                    <div className="flex flex-wrap gap-4">
+                                        {skillGaps?.missingToolsAndTech?.map((tool: string) => (
+                                            <Badge key={tool} className="bg-white border border-slate-200 text-slate-900 px-6 py-4 rounded-3xl text-sm font-black shadow-sm hover:border-blue-300 hover:shadow-md transition-all cursor-default">
+                                                {tool}
+                                            </Badge>
+                                        )) || (
+                                            <p className="text-slate-500 font-bold italic">No critical tech gaps identified.</p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="p-8 bg-slate-900 rounded-[2.5rem] text-white relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:scale-110 transition-transform duration-700">
+                                        <TrendingUp className="h-32 w-32" />
+                                    </div>
+                                    <div className="relative z-10 space-y-3">
+                                        <div className="flex items-center gap-2">
+                                            <div className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
+                                            <span className="text-[9px] font-black text-cyan-400 uppercase tracking-[0.2em]">Strategy Insight</span>
+                                        </div>
+                                        <h5 className="text-xl font-black tracking-tight">Industry-Standard Stack</h5>
+                                        <p className="text-slate-300 text-sm font-medium leading-relaxed">
+                                            Incorporating these tools will place your resume in the top 5% of candidate compatibility for technical screenings.
+                                        </p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </TabsContent>
+
+                {/* Structure Content */}
+                <TabsContent value="formatting" className="animate-in fade-in slide-in-from-bottom-8 duration-700 outline-none">
+                    <Card className="premium-card border-none overflow-hidden">
+                        <div className="grid grid-cols-1 lg:grid-cols-2">
+                            <div className="p-12 md:p-16 bg-white border-r border-slate-50">
+                                <div className="space-y-8">
+                                    <div className="space-y-4">
+                                        <div className="h-14 w-14 premium-icon-bg icon-glow-blue shadow-lg shadow-blue-500/10 mb-6">
+                                            <FileText className="h-7 w-7" />
+                                        </div>
+                                        <h3 className="text-4xl font-black text-slate-900 tracking-tight">Structural Integrity</h3>
+                                        <p className="text-slate-500 font-medium text-lg leading-relaxed">
+                                            Analyzing the machine-readability of your resume to ensure 100% parsing success across all major ATS platforms.
+                                        </p>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        {structuralIssues?.length > 0 ? (
+                                            structuralIssues.map((issue: string, i: number) => (
+                                                <div key={i} className="group p-6 bg-slate-50 rounded-[2.5rem] border border-slate-100 flex items-start gap-6 hover:bg-white hover:border-blue-100 transition-all duration-300">
+                                                    <div className="h-10 w-10 rounded-2xl bg-white border border-slate-200 flex items-center justify-center shrink-0 shadow-sm text-slate-400 group-hover:text-accent-blue transition-colors">
+                                                        <AlertCircle className="w-5 h-5" />
+                                                    </div>
+                                                    <div className="flex-1 space-y-1">
+                                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Formatting Error</span>
+                                                        <p className="text-base font-bold text-slate-700 leading-relaxed">{issue}</p>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="p-10 bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200 text-center space-y-4">
+                                                <CheckCircle2 className="h-12 w-12 text-emerald-500 mx-auto" />
+                                                <p className="text-lg font-black text-slate-900 tracking-tight">Structure Optimized</p>
+                                                <p className="text-sm text-slate-500 font-medium">Your resume structure is perfectly aligned with industry standards.</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="p-12 md:p-16 bg-slate-50 flex flex-col justify-center space-y-12">
+                                <div className="space-y-4">
+                                    <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Writing Excellence</h4>
+                                    <h3 className="text-3xl font-black text-slate-900 tracking-tight">Content Precision</h3>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    {[
+                                        { label: "Bullet Strength", val: "Elite", icon: <TrendingUp className="w-5 h-5" /> },
+                                        { label: "Metric Density", val: "High", icon: <Gauge className="w-5 h-5" /> },
+                                        { label: "Verb Impact", val: "Top Tier", icon: <Zap className="w-5 h-5" /> },
+                                        { label: "Readability", val: "Optimized", icon: <Brain className="w-5 h-5" /> },
+                                    ].map((item, i) => (
+                                        <div key={i} className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 transition-all group">
+                                            <div className="h-10 w-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-300 mb-6 group-hover:text-accent-blue transition-colors">
+                                                {item.icon}
+                                            </div>
+                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{item.label}</p>
+                                            <p className="text-2xl font-black text-slate-900">{item.val}</p>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="p-8 bg-white rounded-[2.5rem] border border-slate-100 shadow-sm space-y-4">
+                                    <div className="flex items-center gap-3">
+                                        <Sparkles className="h-5 w-5 text-accent-blue" />
+                                        <span className="text-sm font-black text-slate-900 uppercase tracking-widest">Quality Assurance</span>
+                                    </div>
+                                    <p className="text-slate-500 font-medium text-sm leading-relaxed">
+                                        Your content quality score is based on our proprietary AI model trained on over 100k successful job applications.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </Card>
+                </TabsContent>
+
+                {/* Optimizations Content */}
+                <TabsContent value="actions" className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700 outline-none pt-4">
+                    <div className="space-y-8">
+                        <div className="flex flex-col md:flex-row justify-between items-end gap-6">
+                            <div className="space-y-4">
+                                <Badge className="bg-slate-900 text-white border-none rounded-xl px-4 py-1.5 font-black text-[10px] uppercase tracking-[0.2em]">Optimization Suite</Badge>
+                                <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">High-Impact <span className="gradient-text">Fixes</span></h2>
+                                <p className="text-slate-500 font-medium text-lg max-w-2xl leading-relaxed">
+                                    AI-engineered enhancements designed to bypass legacy filters and capture executive attention.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-8">
+                            {recommendations?.bulletFixes?.slice(0, 4).map((fix: any, i: number) => (
+                                <div key={i} className="group/fix relative animate-item bg-white rounded-[3.5rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden flex flex-col xl:flex-row transition-all duration-500 hover:shadow-2xl hover:shadow-slate-300/50">
+                                    <div className="flex-1 p-10 md:p-14 bg-slate-50/50 flex flex-col justify-center space-y-6">
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-2 w-2 rounded-full bg-slate-300" />
+                                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Original Narrative</span>
+                                        </div>
+                                        <p className="text-xl font-bold text-slate-500 leading-relaxed italic opacity-80">&quot;{fix.original}&quot;</p>
+                                    </div>
+
+                                    <div className="hidden xl:flex items-center justify-center w-24 bg-white relative z-10 -mx-12">
+                                        <div className="h-16 w-16 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-2xl shadow-slate-900/20 group-hover/fix:scale-110 group-hover/fix:rotate-180 transition-all duration-700">
+                                            <ArrowRight className="h-6 w-6" />
+                                        </div>
+                                    </div>
+
+                                    <div className="flex-1 p-10 md:p-14 bg-white flex flex-col justify-center space-y-8 relative">
+                                        <div className="absolute top-0 right-0 p-10 opacity-[0.03] group-hover/fix:scale-110 transition-transform duration-700">
+                                            <Sparkles className="h-40 w-40" />
+                                        </div>
+                                        
+                                        <div className="space-y-6 relative z-10">
+                                            <div className="flex items-center gap-3">
+                                                <div className="h-2 w-2 rounded-full bg-accent-blue animate-pulse" />
+                                                <span className="text-[10px] font-black text-accent-blue uppercase tracking-[0.2em]">Optimized Version</span>
+                                            </div>
+                                            <p className="text-2xl font-black text-slate-900 tracking-tight leading-tight">&quot;{fix.improved}&quot;</p>
+                                        </div>
+
+                                        <div className="pt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-t border-slate-50 relative z-10">
+                                            <div className="flex items-center gap-3 text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                                <Info className="h-4 w-4 text-slate-300" />
+                                                <span>{fix.reason}</span>
+                                            </div>
+                                            <Button 
+                                                onClick={() => {
+                                                    handleApplyFix(`bullet-${i}`);
+                                                    navigator.clipboard.writeText(fix.improved);
+                                                }}
+                                                className={cn(
+                                                    "h-14 px-10 rounded-[1.5rem] font-black text-xs uppercase tracking-widest transition-all shadow-xl active:scale-[0.98]",
+                                                    appliedFixes.has(`bullet-${i}`) 
+                                                        ? "bg-emerald-500 hover:bg-emerald-600 text-white shadow-emerald-500/20" 
+                                                        : "bg-slate-900 hover:bg-slate-800 text-white shadow-slate-900/20 hover:scale-[1.05]"
+                                                )}
+                                            >
+                                                {appliedFixes.has(`bullet-${i}`) ? (
+                                                    <span className="flex items-center gap-3"><CheckCircle2 className="h-5 w-5" /> Copied to Clipboard</span>
+                                                ) : (
+                                                    <span className="flex items-center gap-3">Use Optimized Version <ArrowRight className="h-4 w-4 opacity-50" /></span>
+                                                )}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Roadmap Section */}
+                        <div className="pt-8">
+                            <Card className="premium-card border-none overflow-hidden p-2">
+                                <div className="p-10 border-b border-slate-50">
+                                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Implementation Roadmap</h3>
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2">Sequential steps for maximum profile visibility</p>
+                                </div>
+                                <CardContent className="p-8">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {recommendations?.priorityFixList?.map((fix: string, i: number) => (
+                                            <div key={i} className="group relative flex gap-8 p-10 bg-slate-50 rounded-[3rem] border border-slate-100/50 hover:bg-white hover:border-blue-100 hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500">
+                                                <span className="text-5xl font-black text-slate-200 italic group-hover:text-accent-blue/20 transition-colors shrink-0">{i + 1}</span>
+                                                <div className="flex-1 space-y-1">
+                                                    <p className="text-lg font-black text-slate-800 leading-tight group-hover:text-slate-900 transition-colors">{fix}</p>
+                                                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-tight">Priority Step</p>
+                                                </div>
+                                                <div className="h-12 w-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-300 group-hover:bg-accent-blue group-hover:text-white group-hover:border-accent-blue transition-all">
+                                                    <ArrowRight className="w-5 h-5" />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </CardContent>
                             </Card>
                         </div>
-
-                        <Card className="animate-item premium-card p-5">
-                            <CardHeader className="pb-4 p-0">
-                                <div className="flex items-center gap-3">
-                                    <div className="h-10 w-10 premium-icon-bg icon-glow-rose">
-                                        <AlertTriangle className="h-5 w-5" />
-                                    </div>
-                                    <h3 className="font-black text-text-primary text-lg">Key Insights</h3>
-                                </div>
-                            </CardHeader>
-
-                            <CardContent className="p-0">
-                                <div className="space-y-4 px-2">
-                                    {critique?.primaryRejectionReasons?.length > 0 ? (
-                                        critique.primaryRejectionReasons.map((reason: string, i: number) => (
-                                            <div key={i} className="flex gap-4 p-4 bg-red-50/50 rounded-2xl border border-red-100/50 hover:bg-red-50 transition-colors">
-                                                <div className="h-8 w-8 rounded-xl bg-red-100 text-red-600 flex items-center justify-center flex-shrink-0 text-sm font-black">
-                                                    {i + 1}
-                                                </div>
-                                                <p className="text-sm font-bold text-text-primary leading-snug self-center">{reason}</p>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div className="p-6 bg-emerald-50/50 rounded-2xl border border-dashed border-emerald-200 text-center">
-                                            <div className="h-10 w-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                                                <CheckCircle2 className="h-5 w-5" />
-                                            </div>
-                                            <p className="text-sm font-black text-emerald-700 uppercase tracking-wide">No Critical Risks</p>
-                                            <p className="text-xs text-emerald-600 mt-1">Your resume has no major red flags</p>
-                                        </div>
-                                    )}
-                                </div>
-                            </CardContent>
-
-                        </Card>
-                    </div>
-                </TabsContent>
-
-                <TabsContent value="analysis" className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <div ref={analysisRef}>
-                        <Card className="premium-card overflow-hidden">
-                            <div className="p-8 border-b border-gray-50 bg-gradient-to-r from-blue-50/30 to-purple-50/30">
-                                <div className="flex items-center gap-4 mb-2">
-                                    <div className="h-12 w-12 premium-icon-bg icon-glow-blue">
-                                        <Brain className="h-6 w-6" />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-xl font-black text-text-primary">Comprehensive Score Analysis</h3>
-                                        <p className="text-sm text-text-secondary font-medium">AI-powered evaluation of your professional profile</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <CardContent className="p-10">
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                                    {/* All 6 scores */}
-                                    <div className="space-y-8">
-                                        {[
-                                            {
-                                                label: "ATS Compatibility",
-                                                val: atsBreakdown?.scores?.atsCompatibility,
-                                                reason: atsBreakdown?.universalAnalysis?.scores?.atsReadability?.interpretation || "Measures how well ATS systems can parse your resume"
-                                            },
-                                            {
-                                                label: "Parsing Reliability",
-                                                val: atsBreakdown?.scores?.parsingReliability,
-                                                reason: "Confidence level in text extraction accuracy"
-                                            },
-                                            {
-                                                label: "Role Expectation Match",
-                                                val: atsBreakdown?.scores?.roleExpectationMatch,
-                                                reason: atsBreakdown?.universalAnalysis?.scores?.roleAlignment?.interpretation || "Alignment with target role requirements"
-                                            },
-                                            {
-                                                label: "Skill Evidence",
-                                                val: atsBreakdown?.scores?.skillEvidence,
-                                                reason: atsBreakdown?.universalAnalysis?.scores?.evidenceStrength?.interpretation || "Strength of demonstrated skills and impact"
-                                            },
-                                            {
-                                                label: "Responsibility Alignment",
-                                                val: atsBreakdown?.scores?.responsibilityAlignment,
-                                                reason: "Match between your experience and role responsibilities"
-                                            },
-                                            {
-                                                label: "Shortlisting Probability",
-                                                val: atsBreakdown?.scores?.recruiterShortlistingProbability,
-                                                reason: atsBreakdown?.universalAnalysis?.scores?.composite?.interpretation || "Overall competitiveness score"
-                                            },
-                                        ].map((item, i) => (
-                                            <div key={i} className="animate-item p-4 rounded-xl bg-gradient-to-r from-gray-50/50 to-white border border-gray-100 hover:border-blue-200 hover:shadow-lg transition-all duration-300">
-                                                <div className="flex justify-between items-end mb-3">
-                                                    <span className="text-xs font-black text-text-secondary uppercase tracking-widest">{item.label}</span>
-                                                    <span className={`text-2xl font-black font-mono ${item.val >= 70 ? 'text-emerald-600' : item.val >= 50 ? 'text-amber-600' : 'text-red-600'}`}>{item.val}%</span>
-                                                </div>
-                                                <div className="h-3 bg-gradient-to-r from-gray-100 to-gray-50 rounded-full overflow-hidden">
-                                                    <div
-                                                        className={`h-full rounded-full transition-all duration-1000 ${item.val >= 70 ? 'bg-gradient-to-r from-emerald-500 to-cyan-500' : item.val >= 50 ? 'bg-gradient-to-r from-amber-500 to-orange-500' : 'bg-gradient-to-r from-red-500 to-rose-500'}`}
-                                                        style={{ width: `${item.val}%` }}
-                                                    />
-                                                </div>
-                                                <p className="text-xs text-text-secondary mt-2 leading-relaxed">{item.reason}</p>
-                                            </div>
-                                        ))}
-                                    </div>
-
-
-                                    {/* AI Insight Card */}
-                                    <div className="space-y-6">
-                                        <div className="animate-item bg-gradient-to-br from-accent-blue to-blue-700 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-2xl shadow-blue-500/20 group">
-                                            <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:scale-110 transition-transform duration-700">
-                                                <Brain className="h-40 w-40" />
-                                            </div>
-                                            <div className="relative z-10 space-y-4">
-                                                <Badge className="bg-white/20 text-white border-none rounded-xl px-4 py-1.5 font-black text-[11px] uppercase tracking-widest">AI INSIGHT</Badge>
-                                                <h4 className="text-2xl font-black tracking-tight">Role Fit Assessment</h4>
-                                                <p className="text-blue-50 text-sm leading-relaxed font-bold">
-                                                    {critique?.roleFitAssessment}
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        {/* Score Factors - Premium Styled */}
-                                        <div className="animate-item premium-card p-6">
-                                            <div className="flex items-center gap-3 mb-5">
-                                                <div className="h-10 w-10 premium-icon-bg icon-glow-purple">
-                                                    <TrendingUp className="h-5 w-5" />
-                                                </div>
-                                                <h5 className="text-sm font-black text-text-primary uppercase tracking-wide">Score Insights</h5>
-                                            </div>
-                                            <div className="space-y-3">
-                                                {atsBreakdown?.universalAnalysis?.scores?.composite?.factors?.length > 0 ? (
-                                                    atsBreakdown.universalAnalysis.scores.composite.factors.map((factor: string, i: number) => (
-                                                        <div key={i} className="flex items-start gap-3 p-3 bg-gradient-to-r from-blue-50/50 to-purple-50/50 rounded-xl border border-blue-100/50 hover:border-blue-200 transition-all">
-                                                            <div className="h-5 w-5 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-[10px] font-black shrink-0 mt-0.5">
-                                                                {i + 1}
-                                                            </div>
-                                                            <span className="text-sm font-medium text-text-primary leading-relaxed">{factor}</span>
-                                                        </div>
-                                                    ))
-                                                ) : (
-                                                    <>
-                                                        <div className="flex items-start gap-3 p-3 bg-gradient-to-r from-emerald-50/50 to-cyan-50/50 rounded-xl border border-emerald-100/50">
-                                                            <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
-                                                            <span className="text-sm font-medium text-text-primary">ATS: {atsBreakdown?.scores?.atsCompatibility}% - Resume structure optimized</span>
-                                                        </div>
-                                                        <div className="flex items-start gap-3 p-3 bg-gradient-to-r from-blue-50/50 to-indigo-50/50 rounded-xl border border-blue-100/50">
-                                                            <Target className="h-5 w-5 text-blue-500 shrink-0 mt-0.5" />
-                                                            <span className="text-sm font-medium text-text-primary">Role Alignment: {atsBreakdown?.scores?.roleExpectationMatch}%</span>
-                                                        </div>
-                                                        <div className="flex items-start gap-3 p-3 bg-gradient-to-r from-purple-50/50 to-pink-50/50 rounded-xl border border-purple-100/50">
-                                                            <Zap className="h-5 w-5 text-purple-500 shrink-0 mt-0.5" />
-                                                            <span className="text-sm font-medium text-text-primary">Evidence: {atsBreakdown?.scores?.skillEvidence}% - Impact demonstrated</span>
-                                                        </div>
-                                                        <div className="flex items-start gap-3 p-3 bg-gradient-to-r from-amber-50/50 to-orange-50/50 rounded-xl border border-amber-100/50">
-                                                            <Lightbulb className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
-                                                            <span className="text-sm font-medium text-text-primary">Clarity: {atsBreakdown?.universalAnalysis?.scores?.claritySignaling?.value || 75}%</span>
-                                                        </div>
-                                                    </>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </CardContent>
-
-                        </Card>
-                    </div>
-                </TabsContent>
-
-                <TabsContent value="skills" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <div ref={skillsRef} className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <Card className="animate-item premium-card p-6">
-                            <div className="flex items-center gap-4 mb-8">
-                                <div className="h-14 w-14 premium-icon-bg icon-glow-rose">
-                                    <Target className="h-7 w-7" />
-                                </div>
-                                <div>
-                                    <CardTitle className="text-xl font-black">Skill Analysis</CardTitle>
-                                    <CardDescription className="font-bold text-xs uppercase tracking-wider text-text-secondary mt-1">Core competencies review</CardDescription>
-                                </div>
-                            </div>
-
-                            <CardContent className="p-0 space-y-4">
-                                {skillGaps?.missingCoreSkills?.map((skill: string) => (
-                                    <div key={skill} className="space-y-3 p-4 bg-gray-50/50 rounded-2xl border border-gray-100 hover:border-red-200 transition-all group/skill">
-                                        <div className="flex items-center justify-between gap-4">
-                                            <span className="text-sm font-black text-text-primary tracking-tight">{skill}</span>
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                className="h-8 px-4 rounded-xl bg-white border-gray-200 text-accent-blue font-black text-[10px] uppercase tracking-widest hover:bg-accent-blue hover:text-white hover:border-accent-blue transition-all"
-                                                onClick={() => handleApplyFix(`skill-${skill}`)}
-                                                disabled={isGenerating === `skill-${skill}`}
-                                            >
-                                                {isGenerating === `skill-${skill}` ? "Working..." : "AI Generate Fix"}
-                                            </Button>
-                                        </div>
-                                        {appliedFixes.has(`skill-${skill}`) && (
-                                            <div className="text-[11px] font-bold text-emerald-700 bg-emerald-50 p-4 rounded-xl border border-emerald-100 flex gap-3 animate-in slide-in-from-top-2 duration-300">
-                                                <Zap className="h-4 w-4 shrink-0" />
-                                                <p>Suggestion: <span className="italic font-black text-emerald-800">&quot;Utilized {skill} to drive technical decision-making, resulting in 15% efficiency gain.&quot;</span></p>
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                                {(!skillGaps?.missingCoreSkills || skillGaps.missingCoreSkills.length === 0) && (
-                                    <div className="space-y-6">
-                                        <div className="relative p-6 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-2xl overflow-hidden shadow-lg shadow-teal-500/20">
-                                            <div className="absolute top-0 right-0 opacity-10">
-                                                <Target className="w-32 h-32 -mr-8 -mt-8 text-white" />
-                                            </div>
-                                            <div className="relative z-10 flex items-center gap-4">
-                                                <div className="h-12 w-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
-                                                    <CheckCircle2 className="h-6 w-6 text-white" />
-                                                </div>
-                                                <div>
-                                                    <h4 className="text-lg font-black text-white uppercase tracking-wide">No Critical Gaps</h4>
-                                                    <p className="text-teal-100 text-sm font-medium">Your profile matches all core role requirements</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {atsBreakdown?.universalAnalysis?.alignment?.explicit?.length > 0 && (
-                                            <div className="p-5 bg-gradient-to-br from-emerald-50 to-white rounded-2xl border border-emerald-100/50 hover:shadow-lg hover:shadow-emerald-500/5 transition-all">
-                                                <div className="flex items-center gap-2 mb-3">
-                                                    <div className="h-6 w-6 rounded-full bg-emerald-100 flex items-center justify-center">
-                                                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                                                    </div>
-                                                    <p className="text-xs font-black text-emerald-800 uppercase tracking-widest">Verified Mastery</p>
-                                                </div>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {atsBreakdown.universalAnalysis.alignment.explicit.slice(0, 8).map((item: any, i: number) => (
-                                                        <Badge key={i} className="bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-800 border-none px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-sm">
-                                                            {item.skill}
-                                                        </Badge>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-                                        {atsBreakdown?.universalAnalysis?.alignment?.implicit?.length > 0 && (
-                                            <div className="p-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100/50">
-                                                <div className="flex items-center gap-2 mb-3">
-                                                    <div className="h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center">
-                                                        <Brain className="h-3.5 w-3.5 text-blue-600" />
-                                                    </div>
-                                                    <p className="text-xs font-black text-blue-800 uppercase tracking-widest">Implicitly Demonstrated</p>
-                                                </div>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {atsBreakdown.universalAnalysis.alignment.implicit.slice(0, 6).map((item: any, i: number) => (
-                                                        <Badge key={i} className="bg-white text-blue-700 border-blue-200 px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-sm">
-                                                            {item.skill}
-                                                        </Badge>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-
-                            </CardContent>
-                        </Card>
-
-                        <Card className="animate-item premium-card p-6">
-                            <div className="flex items-center gap-4 mb-8">
-                                <div className="h-14 w-14 premium-icon-bg icon-glow-amber">
-                                    <Zap className="h-7 w-7" />
-                                </div>
-                                <div>
-                                    <CardTitle className="text-xl font-black">Technology Stack</CardTitle>
-                                    <CardDescription className="font-bold text-xs uppercase tracking-wider text-text-secondary mt-1">Tools & frameworks analysis</CardDescription>
-                                </div>
-                            </div>
-                            <CardContent className="p-0">
-                                {skillGaps?.missingToolsAndTech?.length > 0 ? (
-                                    <div>
-                                        <p className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-3">Recommended to Add:</p>
-                                        <div className="flex flex-wrap gap-3">
-                                            {skillGaps.missingToolsAndTech.map((tool: string) => (
-                                                <Badge key={tool} className="bg-gradient-to-r from-amber-50 to-orange-50 text-amber-700 hover:from-amber-100 hover:to-orange-100 border border-amber-200 px-4 py-2 rounded-2xl font-black text-[12px] transition-all">
-                                                    {tool}
-                                                </Badge>
-                                            ))}
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-6">
-                                        <div className="relative p-6 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl overflow-hidden shadow-lg shadow-amber-500/20">
-                                            <div className="absolute top-0 right-0 opacity-10">
-                                                <Zap className="w-32 h-32 -mr-8 -mt-8 text-white" />
-                                            </div>
-                                            <div className="relative z-10 flex items-center gap-4">
-                                                <div className="h-12 w-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
-                                                    <CheckCircle2 className="h-6 w-6 text-white" />
-                                                </div>
-                                                <div>
-                                                    <h4 className="text-lg font-black text-white uppercase tracking-wide">Strong Tech Coverage</h4>
-                                                    <p className="text-amber-100 text-sm font-medium">Your technology skills align well with role requirements</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {atsBreakdown?.universalAnalysis?.alignment?.explicit?.filter((s: any) => s.skill?.toLowerCase().includes('python') || s.skill?.toLowerCase().includes('react') || s.skill?.toLowerCase().includes('java') || s.skill?.toLowerCase().includes('node'))?.length > 0 && (
-                                            <div className="flex flex-wrap gap-2">
-                                                {atsBreakdown.universalAnalysis.alignment.explicit.slice(0, 6).map((item: any, i: number) => (
-                                                    <Badge key={i} className="bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border border-blue-200 px-3 py-1.5 rounded-xl text-xs font-bold">
-                                                        ✓ {item.skill}
-                                                    </Badge>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </CardContent>
-                        </Card>
-
-
-                        <Card className="animate-item md:col-span-2 premium-card p-6">
-                            <div className="flex items-center gap-4 mb-8">
-                                <div className="h-14 w-14 premium-icon-bg icon-glow-blue">
-                                    <Briefcase className="h-7 w-7" />
-                                </div>
-                                <div>
-                                    <CardTitle className="text-xl font-black">Role Alignment</CardTitle>
-                                    <CardDescription className="font-bold text-xs uppercase tracking-wider text-text-secondary mt-1">Experience vs. expectations analysis</CardDescription>
-                                </div>
-                            </div>
-
-                            <CardContent className="p-0">
-                                <div className="space-y-6">
-                                    {/* Expectations Met */}
-                                    {responsibilityAnalysis?.expectationsMet?.length > 0 && (
-                                        <div>
-                                            <p className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-3">✓ Expectations Met</p>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                                {responsibilityAnalysis.expectationsMet.slice(0, 4).map((item: any, i: number) => (
-                                                    <div key={i} className="flex gap-3 p-4 bg-emerald-50/50 rounded-xl border border-emerald-100">
-                                                        <CheckCircle2 className="h-4 w-4 text-emerald-500 mt-0.5 shrink-0" />
-                                                        <div>
-                                                            <span className="text-sm font-bold text-emerald-800">{item.expectation}</span>
-                                                            {item.evidence && (
-                                                                <p className="text-xs text-emerald-600 mt-1">{item.evidence}</p>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-                                    {/* Expectations Differ */}
-                                    {responsibilityAnalysis?.expectationsDiffer?.length > 0 && (
-                                        <div>
-                                            <p className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-3">⚡ Areas to Strengthen</p>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                                {responsibilityAnalysis.expectationsDiffer.map((item: any, i: number) => (
-                                                    <div key={i} className="flex gap-3 p-4 bg-amber-50/50 rounded-xl border border-amber-100">
-                                                        <AlertCircle className="h-4 w-4 text-amber-500 mt-0.5 shrink-0" />
-                                                        <div>
-                                                            <span className="text-sm font-bold text-amber-800">{item.expectation}</span>
-                                                            {item.assessment && (
-                                                                <p className="text-xs text-amber-600 mt-1">{item.assessment}</p>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-                                    {/* Show nothing found message if both empty */}
-                                    {(!responsibilityAnalysis?.expectationsMet || responsibilityAnalysis.expectationsMet.length === 0) &&
-                                        (!responsibilityAnalysis?.expectationsDiffer || responsibilityAnalysis.expectationsDiffer.length === 0) && (
-                                            <div className="p-8 text-center bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
-                                                <p className="text-sm font-bold text-gray-500">Role responsibility analysis pending</p>
-                                            </div>
-                                        )}
-                                </div>
-                            </CardContent>
-
-                        </Card>
-                    </div>
-                </TabsContent>
-
-                <TabsContent value="formatting" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <div ref={formattingRef} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <Card className="animate-item premium-card p-6">
-                            <div className="flex items-center gap-4 mb-8">
-                                <div className="h-14 w-14 premium-icon-bg icon-glow-rose">
-                                    <AlertTriangle className="h-7 w-7" />
-                                </div>
-                                <div>
-                                    <CardTitle className="text-xl font-black">Format & Structure</CardTitle>
-                                    <CardDescription className="font-bold text-xs uppercase tracking-wider text-text-secondary mt-1">ATS parsing analysis</CardDescription>
-                                </div>
-                            </div>
-
-                            <CardContent className="p-0">
-                                {structuralIssues?.length > 0 ? (
-                                    <div className="space-y-4">
-                                        {structuralIssues.map((issue: string, i: number) => (
-                                            <div key={i} className="p-5 text-sm font-bold text-text-primary flex items-start gap-4 bg-gray-50/50 rounded-2xl border border-gray-100 justify-between">
-                                                <div className="flex gap-4">
-                                                    <div className="h-2 w-2 rounded-full bg-red-500 mt-2 shrink-0 shadow-sm shadow-red-500/50" />
-                                                    <p className="leading-relaxed">{issue}</p>
-                                                </div>
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    className="h-8 rounded-xl border-gray-200 text-accent-blue bg-white hover:bg-accent-blue hover:text-white hover:border-accent-blue text-[10px] font-black uppercase tracking-widest shrink-0 transition-all"
-                                                    onClick={() => handleApplyFix(`issue-${i}`)}
-                                                    disabled={isGenerating === `issue-${i}` || appliedFixes.has(`issue-${i}`)}
-                                                >
-                                                    {isGenerating === `issue-${i}` ? "..." : appliedFixes.has(`issue-${i}`) ? "Resolved" : "AI Fix"}
-                                                </Button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="space-y-6">
-                                        {/* Success Header with Gradient */}
-                                        <div className="relative p-6 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-2xl overflow-hidden">
-                                            <div className="absolute top-0 right-0 opacity-10">
-                                                <CheckCircle2 className="w-32 h-32 -mr-8 -mt-8" />
-                                            </div>
-                                            <div className="relative z-10 flex items-center gap-4">
-                                                <div className="h-14 w-14 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
-                                                    <CheckCircle2 className="h-7 w-7 text-white" />
-                                                </div>
-                                                <div className="text-white">
-                                                    <h4 className="text-lg font-black uppercase tracking-wide">Perfect Structure</h4>
-                                                    <p className="text-emerald-100 text-sm font-medium">Your resume is fully ATS-optimized</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Structure Checklist */}
-                                        <div className="grid grid-cols-2 gap-3">
-                                            {[
-                                                { label: "Standard Sections", icon: "✓" },
-                                                { label: "Clean Formatting", icon: "✓" },
-                                                { label: "No Tables/Graphics", icon: "✓" },
-                                                { label: "Proper Headings", icon: "✓" },
-                                            ].map((item, i) => (
-                                                <div key={i} className="flex items-center gap-3 p-3 bg-gradient-to-r from-emerald-50/50 to-cyan-50/50 rounded-xl border border-emerald-100">
-                                                    <div className="h-7 w-7 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400 flex items-center justify-center text-white text-xs font-black">
-                                                        {item.icon}
-                                                    </div>
-                                                    <span className="text-sm font-bold text-emerald-700">{item.label}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-
-                                        {/* ATS Compatibility Score */}
-                                        <div className="p-4 bg-gradient-to-r from-blue-50/50 to-purple-50/50 rounded-xl border border-blue-100/50">
-                                            <div className="flex items-center justify-between mb-2">
-                                                <span className="text-xs font-black text-text-secondary uppercase tracking-wider">ATS Compatibility</span>
-                                                <span className="text-lg font-black text-emerald-600">{atsBreakdown?.scores?.atsCompatibility || 95}%</span>
-                                            </div>
-                                            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                                                <div className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full" style={{ width: `${atsBreakdown?.scores?.atsCompatibility || 95}%` }} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                            </CardContent>
-                        </Card>
-
-                        <Card className="animate-item premium-card p-6">
-                            <div className="flex items-center gap-4 mb-8">
-                                <div className="h-14 w-14 premium-icon-bg icon-glow-purple">
-                                    <Lightbulb className="h-7 w-7" />
-                                </div>
-                                <div>
-                                    <CardTitle className="text-xl font-black">Content Quality</CardTitle>
-                                    <CardDescription className="font-bold text-xs uppercase tracking-wider text-text-secondary mt-1">Writing & impact analysis</CardDescription>
-                                </div>
-                            </div>
-                            <CardContent className="p-0">
-                                <div className="space-y-4">
-                                    {contentIssues?.length > 0 ? (
-                                        contentIssues.map((issue: string, i: number) => (
-                                            <div key={i} className="p-5 text-sm font-bold text-text-primary flex gap-4 bg-gradient-to-r from-blue-50/30 to-purple-50/30 rounded-2xl border border-blue-100/50 hover:border-blue-200 transition-all">
-                                                <div className="h-2 w-2 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 mt-2 shrink-0" />
-                                                <p className="leading-relaxed">{issue}</p>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div className="space-y-6">
-                                            <div className="relative p-6 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl overflow-hidden text-white shadow-lg shadow-purple-500/20">
-                                                <div className="absolute top-0 right-0 opacity-10">
-                                                    <Sparkles className="w-32 h-32 -mr-8 -mt-8" />
-                                                </div>
-                                                <div className="relative z-10">
-                                                    <div className="flex items-center gap-3 mb-2">
-                                                        <div className="h-10 w-10 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
-                                                            <CheckCircle2 className="h-5 w-5 text-white" />
-                                                        </div>
-                                                        <h4 className="text-lg font-black uppercase tracking-wide">Strong Content Quality</h4>
-                                                    </div>
-                                                    <p className="text-purple-100 text-sm font-medium pl-[52px]">Your resume content uses active language and quantifiable metrics.</p>
-                                                </div>
-                                            </div>
-
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div className="group p-5 bg-gradient-to-br from-blue-50 to-white rounded-2xl border border-blue-100/50 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300">
-                                                    <div className="flex justify-between items-start mb-2">
-                                                        <div className="h-10 w-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
-                                                            <FileText className="h-5 w-5" />
-                                                        </div>
-                                                        <span className="text-xs font-black text-blue-300 uppercase tracking-wider">Count</span>
-                                                    </div>
-                                                    <p className="text-3xl font-black text-slate-800 mb-1">{atsBreakdown?.universalAnalysis?.structuralAnalysis?.bulletPoints?.length || 0}</p>
-                                                    <p className="text-xs font-bold text-text-secondary uppercase tracking-tight">Bullet Points Detected</p>
-                                                </div>
-
-                                                <div className="group p-5 bg-gradient-to-br from-purple-50 to-white rounded-2xl border border-purple-100/50 hover:border-purple-200 hover:shadow-lg hover:shadow-purple-500/10 transition-all duration-300">
-                                                    <div className="flex justify-between items-start mb-2">
-                                                        <div className="h-10 w-10 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600 group-hover:scale-110 transition-transform">
-                                                            <TrendingUp className="h-5 w-5" />
-                                                        </div>
-                                                        <span className="text-xs font-black text-purple-300 uppercase tracking-wider">Impact</span>
-                                                    </div>
-                                                    <div className="flex items-baseline gap-1 mb-1">
-                                                        <p className="text-3xl font-black text-slate-800">{atsBreakdown?.universalAnalysis?.structuralAnalysis?.metricsDetected?.length || 0}</p>
-                                                        <span className="text-xs font-bold text-purple-500 uppercase">Metrics</span>
-                                                    </div>
-                                                    <p className="text-xs font-bold text-text-secondary uppercase tracking-tight">Quantifiable Achievements</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                    </div>
-                </TabsContent>
-
-                <TabsContent value="actions" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pt-4">
-                    <div ref={actionsRef}>
-                        <Card className="premium-card overflow-hidden">
-                            <div className="p-8 border-b border-gray-50 bg-gradient-to-r from-emerald-50/30 to-cyan-50/30">
-                                <div className="flex items-center gap-4 mb-3">
-                                    <div className="h-12 w-12 premium-icon-bg icon-glow-emerald">
-                                        <Zap className="h-6 w-6" />
-                                    </div>
-                                    <h3 className="text-2xl font-black text-text-primary">High-Impact Optimizations</h3>
-                                </div>
-                                <p className="text-sm text-text-secondary font-bold max-w-2xl leading-relaxed ml-16">
-                                    AI-refined bullet points designed to trigger ATS keyword matches and impress recruiters.
-                                </p>
-                            </div>
-
-                            <CardContent className="p-8 space-y-8">
-                                {recommendations?.bulletFixes?.slice(0, 4).map((fix: any, i: number) => (
-                                    <div key={i} className="animate-item flex flex-col md:flex-row gap-0 rounded-[2rem] bg-white border border-gray-100 overflow-hidden shadow-lg shadow-gray-200/50 group/opt hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300">
-                                        <div className="flex-1 p-8 space-y-4 bg-gray-50/50 relative overflow-hidden">
-                                            <div className="absolute top-0 right-0 p-4 opacity-[0.03]">
-                                                <FileText className="h-40 w-40 -mr-10 -mt-10 rotate-12" />
-                                            </div>
-                                            <div className="relative z-10">
-                                                <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-50 rounded-lg text-red-600 border border-red-100/50 mb-2">
-                                                    <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
-                                                    <span className="text-[9px] font-black uppercase tracking-[0.2em]">Original</span>
-                                                </div>
-                                                <p className="text-xs font-bold text-text-secondary leading-relaxed italic opacity-80">&quot;{fix.original}&quot;</p>
-                                            </div>
-                                        </div>
-
-                                        <div className="hidden md:flex items-center justify-center w-12 bg-white relative z-20">
-                                            <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30 flex items-center justify-center group-hover/opt:scale-110 group-hover/opt:rotate-180 transition-all duration-500">
-                                                <ArrowRight className="h-4 w-4" />
-                                            </div>
-                                        </div>
-
-                                        <div className="flex-1 p-8 space-y-6 bg-gradient-to-br from-white to-blue-50/30 relative">
-                                            <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-indigo-500" />
-                                            <div>
-                                                <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 rounded-lg text-emerald-600 border border-emerald-100/50 mb-3">
-                                                    <Sparkles className="h-3 w-3" />
-                                                    <span className="text-[9px] font-black uppercase tracking-[0.2em]">Optimized</span>
-                                                </div>
-                                                <p className="text-sm font-black text-text-primary leading-relaxed drop-shadow-sm">&quot;{fix.improved}&quot;</p>
-                                            </div>
-
-                                            <div className="pt-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-gray-100/50">
-                                                <div className="flex items-center gap-2 text-[10px] font-black text-blue-600/80 uppercase tracking-widest">
-                                                    <Info className="h-3.5 w-3.5" />
-                                                    <span>{fix.reason}</span>
-                                                </div>
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    className={cn(
-                                                        "h-10 rounded-xl px-6 font-black text-[10px] uppercase tracking-widest transition-all shadow-md hover:shadow-lg border-0",
-                                                        appliedFixes.has(`bullet-${i}`)
-                                                            ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-500/20"
-                                                            : "bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-slate-900/10 hover:scale-105"
-                                                    )}
-                                                    onClick={() => {
-                                                        handleApplyFix(`bullet-${i}`);
-                                                        navigator.clipboard.writeText(fix.improved);
-                                                    }}
-                                                >
-                                                    {appliedFixes.has(`bullet-${i}`) ? (
-                                                        <span className="flex items-center gap-2"><CheckCircle2 className="h-3.5 w-3.5" /> Copied</span>
-                                                    ) : (
-                                                        <span className="flex items-center gap-2">Copy <span className="opacity-50">|</span> Use This</span>
-                                                    )}
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </CardContent>
-                        </Card>
-
-                        <Card className="animate-item shadow-2xl shadow-blue-500/5 border-none bg-white overflow-hidden p-2">
-                            <div className="p-8 border-b border-gray-50">
-                                <h3 className="text-xl font-black text-text-primary">Priority Roadmap</h3>
-                                <p className="text-xs font-bold text-text-secondary uppercase tracking-widest mt-2">Next steps for maximum impact</p>
-                            </div>
-                            <CardContent className="p-6">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {recommendations?.priorityFixList?.map((fix: string, i: number) => (
-                                        <div key={i} className="flex gap-6 p-6 items-center bg-gray-50/50 rounded-2xl hover:bg-white border border-transparent hover:border-blue-100 transition-all group/road">
-                                            <div className="font-black font-mono text-3xl text-gray-200 italic group-hover/road:text-accent-blue transition-colors">{i + 1}</div>
-                                            <div className="flex-1 text-sm font-bold text-text-primary leading-tight">{fix}</div>
-                                            <Button variant="ghost" className="h-8 w-8 rounded-full p-0 text-gray-300 hover:text-accent-blue transition-colors">
-                                                <ArrowRight className="h-5 w-5" />
-                                            </Button>
-                                        </div>
-                                    ))}
-                                </div>
-                            </CardContent>
-                        </Card>
                     </div>
                 </TabsContent>
             </Tabs>
