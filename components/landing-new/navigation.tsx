@@ -2,10 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, X, LayoutDashboard, LogOut, FileText, Sparkles } from 'lucide-react';
+import { Menu, X, LayoutDashboard, LogOut, FileText, Sparkles, Shield } from 'lucide-react';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
-import { handleSignOut } from '@/lib/actions';
+import { signOut, useSession } from 'next-auth/react';
 
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
@@ -54,6 +53,17 @@ export function Navigation() {
         <div className="hidden md:flex items-center gap-3">
           {status === 'authenticated' ? (
             <div className="flex items-center gap-3">
+              {session?.user?.email === 'vikas@networkershome.com' && (
+                <Link href="/admin">
+                  <Button
+                    variant="ghost"
+                    className="px-4 py-2 text-sm font-medium text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-all flex items-center gap-2"
+                  >
+                    <Shield className="w-4 h-4" />
+                    Admin
+                  </Button>
+                </Link>
+              )}
               <Link href="/dashboard">
                 <Button
                   variant="ghost"
@@ -63,15 +73,14 @@ export function Navigation() {
                   Dashboard
                 </Button>
               </Link>
-              <form action={handleSignOut}>
-                <Button
-                  variant="outline"
-                  className="px-5 py-2.5 text-sm font-medium border-slate-200 text-slate-600 hover:text-red-500 hover:bg-red-50 hover:border-red-100 rounded-xl transition-all"
-                >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Sign Out
-                </Button>
-              </form>
+              <Button
+                variant="outline"
+                className="px-5 py-2.5 text-sm font-medium border-slate-200 text-slate-600 hover:text-red-500 hover:bg-red-50 hover:border-red-100 rounded-xl transition-all"
+                onClick={() => signOut({ callbackUrl: '/' })}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign Out
+              </Button>
             </div>
           ) : (
             <>
@@ -113,6 +122,18 @@ export function Navigation() {
             <div className="pt-4 flex flex-col gap-4">
               {status === 'authenticated' ? (
                 <>
+                  {session?.user?.email === 'vikas@networkershome.com' && (
+                    <Link href="/admin" className="w-full">
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-base font-bold text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-xl gap-3 py-6"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <Shield className="w-5 h-5" />
+                        Admin Dashboard
+                      </Button>
+                    </Link>
+                  )}
                   <Link href="/dashboard" className="w-full">
                     <Button
                       variant="ghost"
@@ -131,15 +152,17 @@ export function Navigation() {
                       New Analysis
                     </Button>
                   </Link>
-                  <form action={handleSignOut} className="w-full">
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start text-red-600 hover:bg-red-50 rounded-xl gap-3 py-6 font-bold"
-                    >
-                      <LogOut className="w-5 h-5" />
-                      Sign Out
-                    </Button>
-                  </form>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start text-red-600 hover:bg-red-50 rounded-xl gap-3 py-6 font-bold"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      signOut({ callbackUrl: '/' });
+                    }}
+                  >
+                    <LogOut className="w-5 h-5" />
+                    Sign Out
+                  </Button>
                 </>
               ) : (
                 <>

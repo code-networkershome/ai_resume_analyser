@@ -121,7 +121,15 @@ export async function extractResumeFromFile(file: File): Promise<{
 
     if (lowerName.endsWith(".pdf")) {
         fileType = "pdf";
-        const result = await pdfParse(buffer);
+        fileType = "pdf";
+        // DoS Protection: Race against a timeout
+        const timeoutMs = 15000;
+        const parsePromise = pdfParse(buffer);
+        const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error(`PDF parsing timed out after ${timeoutMs}ms`)), timeoutMs)
+        );
+
+        const result: any = await Promise.race([parsePromise, timeoutPromise]);
         text = result.text || "";
     } else if (lowerName.endsWith(".docx")) {
         fileType = "docx";

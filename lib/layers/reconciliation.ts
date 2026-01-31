@@ -230,8 +230,8 @@ function generateRoadmap(
         });
     }
 
-    // Add bullet rewrites
-    for (const rewrite of aiResult.bulletRewrites.slice(0, 3)) {
+    // Add bullet rewrites (increased from 3 to 5)
+    for (const rewrite of aiResult.bulletRewrites.slice(0, 5)) {
         roadmap.push({
             priority: priority++,
             action: `Improve bullet: "${rewrite.original.substring(0, 50)}..."`,
@@ -241,8 +241,8 @@ function generateRoadmap(
         });
     }
 
-    // Add from alignment gaps
-    for (const gap of aiResult.alignment.gaps.filter(g => g.importance === "high").slice(0, 2)) {
+    // Add from alignment gaps (increased from 2 to 3)
+    for (const gap of aiResult.alignment.gaps.filter(g => g.importance === "high").slice(0, 3)) {
         roadmap.push({
             priority: priority++,
             action: gap.suggestion,
@@ -252,9 +252,9 @@ function generateRoadmap(
         });
     }
 
-    // Improvement issues
-    for (const issue of issues.filter(i => i.severity === "improvement").slice(0, 3)) {
-        if (priority <= 7) {
+    // Improvement issues (increased cap from 7 to 10)
+    for (const issue of issues.filter(i => i.severity === "improvement").slice(0, 5)) {
+        if (priority <= 10) {
             roadmap.push({
                 priority: priority++,
                 action: issue.description,
@@ -265,5 +265,5 @@ function generateRoadmap(
         }
     }
 
-    return roadmap.slice(0, 7);
+    return roadmap.slice(0, 10);
 }

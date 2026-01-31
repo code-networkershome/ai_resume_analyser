@@ -1,15 +1,8 @@
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { AlertCircle, CheckCircle2, XCircle, Info, ChevronRight, BarChart3, TrendingUp, AlertTriangle, ShieldCheck } from "lucide-react";
-import { cn, getScoreColor, getScoreBgColor, getScoreLabel, formatDate } from "@/lib/utils";
 
 import { InteractiveReport } from "@/components/review/interactive-report";
-import { Navigation } from "@/components/landing-new/navigation";
-import { Footer } from "@/components/landing-new/footer";
 
 export default async function ReviewReportPage({
     params,
@@ -31,29 +24,25 @@ export default async function ReviewReportPage({
     }
 
     // Prepare data for client component
+    const atsBreakdownData = review.atsBreakdown as any;
     const reviewData = {
         ...review,
         aiCritique: review.aiCritique as any,
         skillGaps: review.skillGaps as any,
-        atsBreakdown: review.atsBreakdown as any,
+        atsBreakdown: atsBreakdownData,
         responsibilityAnalysis: review.responsibilityAnalysis as any,
         recommendations: review.recommendations as any,
         targetRole: review.targetRole,
         experienceLevel: review.experienceLevel,
         structuralIssues: review.structuralIssues as string[],
         contentIssues: review.contentIssues as string[],
+        // Extract universalAnalysis from atsBreakdown where it's stored
+        universalAnalysis: atsBreakdownData?.universalAnalysis || null,
     };
 
     return (
-        <div className="relative min-h-screen bg-gradient-to-b from-[#F8FAFF] via-white to-slate-50">
-            <Navigation />
-            <main className="relative pt-24 pb-20">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <InteractiveReport review={reviewData} />
-                </div>
-            </main>
-            <Footer />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <InteractiveReport review={reviewData} />
         </div>
     );
 }
-

@@ -3,6 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { logAudit } from "@/lib/audit";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -63,6 +64,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.id = token.id as string;
       }
       return session;
+    },
+  },
+  events: {
+    async signIn({ user }) {
+      await logAudit({
+        action: "USER_LOGIN",
+        userId: user.id,
+        details: { email: user.email },
+      });
+    },
+    async createUser({ user }) {
+      await logAudit({
+        action: "USER_SIGNUP",
+        userId: user.id,
+        details: { email: user.email },
+      });
     },
   },
   secret: process.env.AUTH_SECRET,

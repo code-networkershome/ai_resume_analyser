@@ -253,3 +253,200 @@ export function calculateParsingConfidence(structural: StructuralContext): numbe
 
     return Math.max(0, Math.min(100, confidence));
 }
+
+// ===========================================
+// ENHANCV-STYLE CHECKS
+// ===========================================
+
+import { EnhancvStyleChecks } from "@/lib/types/universal-types";
+
+export function generateEnhancvChecks(
+    resumeText: string,
+    structural: StructuralContext,
+    fileFormat: string = "PDF",
+    fileSizeKB: number = 0
+): EnhancvStyleChecks {
+    const parsingConfidence = calculateParsingConfidence(structural);
+
+    return {
+        atsParseRate: generateAtsParseRate(parsingConfidence),
+        quantifyImpact: analyzeQuantifyImpact(structural),
+        repetition: detectRepetition(resumeText),
+        essentialSections: checkEssentialSections(structural),
+        contactInfo: analyzeContactInfo(structural),
+        fileInfo: checkFileInfo(fileFormat, fileSizeKB),
+        emailCheck: validateEmail(structural.contactInfo.email),
+        headerLinks: detectHeaderLinks(resumeText),
+    };
+}
+
+function generateAtsParseRate(confidence: number): EnhancvStyleChecks["atsParseRate"] {
+    return {
+        percentage: confidence,
+        status: confidence >= 80 ? "success" : confidence >= 60 ? "warning" : "error",
+        message: confidence >= 80
+            ? "We parsed your resume successfully using an industry-leading ATS."
+            : confidence >= 60
+                ? "Some elements of your resume may not parse correctly in ATS systems."
+                : "Your resume has significant parsing issues that may cause ATS failures.",
+    };
+}
+
+function analyzeQuantifyImpact(structural: StructuralContext): EnhancvStyleChecks["quantifyImpact"] {
+    const bullets = structural.bullets;
+    const bulletsWithMetrics = bullets.filter(b => b.hasMetric).length;
+    const bulletsWithoutMetrics = bullets.filter(b => !b.hasMetric).length;
+
+    // Get weak bullets (no metrics AND no strong action verbs)
+    const weakBullets = bullets
+        .filter(b => !b.hasMetric && !b.hasActionVerb)
+        .slice(0, 3)
+        .map(b => b.text);
+
+    const ratio = bullets.length > 0 ? bulletsWithMetrics / bullets.length : 0;
+
+    return {
+        bulletsWithMetrics,
+        bulletsWithoutMetrics,
+        totalBullets: bullets.length,
+        weakBullets,
+        status: ratio >= 0.5 ? "success" : ratio >= 0.25 ? "warning" : "error",
+    };
+}
+
+function detectRepetition(text: string): EnhancvStyleChecks["repetition"] {
+    const words = text.toLowerCase().match(/\b[a-z]{4,}\b/g) || [];
+    const wordCount: Record<string, number> = {};
+
+    // Common words to ignore
+    const stopWords = new Set([
+        "with", "that", "this", "have", "from", "were", "been", "more", "will",
+        "their", "which", "would", "about", "there", "other", "into", "some",
+        "than", "only", "over", "such", "also", "your", "when", "just", "each",
+        "make", "like", "time", "very", "work", "used", "using", "team", "university",
+        "company", "experience", "skills", "education", "project", "projects"
+    ]);
+
+    for (const word of words) {
+        if (!stopWords.has(word)) {
+            wordCount[word] = (wordCount[word] || 0) + 1;
+        }
+    }
+
+    const repeatedWords = Object.entries(wordCount)
+        .filter(([_, count]) => count >= 4)
+        .map(([word, count]) => ({ word, count }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 5);
+
+    return {
+        repeatedWords,
+        status: repeatedWords.length === 0 ? "success" : "warning",
+        message: repeatedWords.length === 0
+            ? "No frequently repeated words found in your resume."
+            : `Found ${repeatedWords.length} words used excessively. Consider using synonyms.`,
+    };
+}
+
+function checkEssentialSections(structural: StructuralContext): EnhancvStyleChecks["essentialSections"] {
+    const essentialNames = ["Experience", "Education", "Summary", "Skills"];
+    const foundNames = structural.sections.map(s => s.name);
+
+    const found = essentialNames.filter(name =>
+        foundNames.some(f => f.toLowerCase().includes(name.toLowerCase()))
+    );
+    const missing = essentialNames.filter(name =>
+        !foundNames.some(f => f.toLowerCase().includes(name.toLowerCase()))
+    );
+
+    return {
+        found,
+        missing,
+        status: missing.length === 0 ? "success" : missing.length <= 1 ? "warning" : "error",
+    };
+}
+
+function analyzeContactInfo(structural: StructuralContext): EnhancvStyleChecks["contactInfo"] {
+    const contact = structural.contactInfo;
+    const found: { type: string; value: string }[] = [];
+    const missing: string[] = [];
+
+    if (contact.email) found.push({ type: "Email", value: contact.email });
+    else missing.push("Email");
+
+    if (contact.phone) found.push({ type: "Phone", value: contact.phone });
+    else missing.push("Phone");
+
+    if (contact.linkedin) found.push({ type: "LinkedIn", value: contact.linkedin });
+    else missing.push("LinkedIn");
+
+    if (contact.github) found.push({ type: "GitHub", value: contact.github });
+    // GitHub is optional, don't add to missing
+
+    return {
+        found,
+        missing,
+        status: missing.length === 0 ? "success" : "warning",
+    };
+}
+
+function checkFileInfo(format: string, sizeKB: number): EnhancvStyleChecks["fileInfo"] {
+    const isPDF = format.toLowerCase() === "pdf";
+    const isReasonableSize = sizeKB < 2048; // 2MB limit
+
+    return {
+        format: format.toUpperCase(),
+        sizeKB,
+        status: isPDF && isReasonableSize ? "success" : "warning",
+    };
+}
+
+function validateEmail(email: string | undefined): EnhancvStyleChecks["emailCheck"] {
+    if (!email) {
+        return {
+            email: null,
+            isProfessional: false,
+            status: "warning",
+            message: "No email address found in your resume.",
+        };
+    }
+
+    // Check for unprofessional patterns
+    const unprofessionalPatterns = [
+        /^(sexy|hot|cool|crazy|ninja|boss|king|queen|dude|babe|baby)\d*/i,
+        /\d{5,}@/,  // Too many numbers
+        /^(xXx|xxx)/i,
+        /(420|69|666)@/,
+    ];
+
+    const isUnprofessional = unprofessionalPatterns.some(p => p.test(email));
+    const isProfessional = !isUnprofessional;
+
+    return {
+        email,
+        isProfessional,
+        status: isProfessional ? "success" : "warning",
+        message: isProfessional
+            ? "Your email address appears professional."
+            : "Consider using a more professional email address.",
+    };
+}
+
+function detectHeaderLinks(text: string): EnhancvStyleChecks["headerLinks"] {
+    // Find full URLs (not just domain names)
+    const urlPattern = /https?:\/\/[^\s]+/gi;
+    const fullUrls = text.match(urlPattern) || [];
+
+    // Clean up URLs (remove trailing punctuation)
+    const cleanUrls = fullUrls.map(url => url.replace(/[.,;:!?)]+$/, ""));
+    const uniqueUrls = [...new Set(cleanUrls)];
+
+    return {
+        fullUrlsFound: uniqueUrls.slice(0, 5),
+        hasFullUrls: uniqueUrls.length > 0,
+        status: uniqueUrls.length > 0 ? "success" : "warning",
+        message: uniqueUrls.length > 0
+            ? "Full URLs detected, ensuring proper ATS recognition."
+            : "Consider adding full URLs (https://...) for better ATS compatibility.",
+    };
+}

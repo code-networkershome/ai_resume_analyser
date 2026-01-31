@@ -72,6 +72,7 @@ model User {
   sessions Session[]
   resumes  Resume[]
   usage    Usage?
+  auditLogs AuditLog[]
 
   @@map("users")
 }
@@ -162,4 +163,25 @@ model Subscriber {
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("subscribers")
+}
+
+// ===========================================
+// AUDIT LOGGING
+// ===========================================
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?  @map("user_id")
+  action    String   // e.g. "LOGIN", "REVIEW_GENERATED", "ADMIN_ACCESSED"
+  resource  String?  // e.g. "/admin/users", "resume:123"
+  details   Json?    // e.g. { "ip": "1.2.3.4", "browser": "Chrome", "status": "success" }
+  ipAddress String?  @map("ip_address")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
 }

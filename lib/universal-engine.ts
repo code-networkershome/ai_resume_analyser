@@ -9,7 +9,7 @@ import {
     ParsingTransparency,
 } from "@/lib/types/universal-types";
 
-import { runStructuralAnalysis, calculateParsingConfidence } from "./layers/structural-analysis";
+import { runStructuralAnalysis, calculateParsingConfidence, generateEnhancvChecks } from "./layers/structural-analysis";
 import { runAIInference } from "./layers/ai-inference";
 import { synthesizeScores } from "./layers/score-synthesis";
 import { reconcileAndGenerateVerdict } from "./layers/reconciliation";
@@ -69,6 +69,11 @@ export async function analyzeResumeUniversal(
     });
 
     // ===========================================
+    // ENHANCV-STYLE CHECKS
+    // ===========================================
+    const enhancvChecks = generateEnhancvChecks(resumeText, structural);
+
+    // ===========================================
     // FINAL ASSEMBLY
     // ===========================================
     return {
@@ -87,6 +92,14 @@ export async function analyzeResumeUniversal(
             bulletRewrites: aiResult.bulletRewrites,
             generalAdvice: generateGeneralAdvice(reconciled.scores, aiResult),
         },
+        enhancvChecks,
+        // NEW FEATURES
+        keywordAnalysis: aiResult.keywordAnalysis,
+        skillsGraph: aiResult.skillsGraph,
+        careerPath: aiResult.careerPath,
+        learningRoadmap: aiResult.learningRoadmap,
+        toneAnalysis: aiResult.toneAnalysis,
+        hiddenSkills: aiResult.hiddenSkills,
     };
 }
 

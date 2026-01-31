@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Menu, X, LayoutDashboard, FileText, LogOut, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { handleSignOut } from '@/lib/actions';
+import { signOut } from 'next-auth/react';
 
 export function AppNavbar() {
     const [scrolled, setScrolled] = useState(false);
@@ -63,16 +63,15 @@ export function AppNavbar() {
 
                 {/* CTA Buttons / Profile */}
                 <div className="hidden md:flex items-center gap-4">
-                    <form action={handleSignOut}>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-sm font-medium text-text-secondary hover:text-red-600 hover:bg-red-50 flex items-center gap-2"
-                        >
-                            <LogOut className="w-4 h-4" />
-                            Sign Out
-                        </Button>
-                    </form>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-sm font-medium text-text-secondary hover:text-red-600 hover:bg-red-50 flex items-center gap-2"
+                        onClick={() => signOut({ callbackUrl: '/' })}
+                    >
+                        <LogOut className="w-4 h-4" />
+                        Sign Out
+                    </Button>
                     {pathname !== '/review' && (
                         <Link href="/review">
                             <Button
@@ -118,15 +117,17 @@ export function AppNavbar() {
                             </Link>
                         ))}
                         <div className="pt-4 border-t border-gray-100">
-                            <form action={handleSignOut} className="w-full">
-                                <Button
-                                    variant="ghost"
-                                    className="w-full justify-start text-red-600 hover:bg-red-50 gap-3"
-                                >
-                                    <LogOut className="w-5 h-5" />
-                                    Sign Out
-                                </Button>
-                            </form>
+                            <Button
+                                variant="ghost"
+                                className="w-full justify-start text-red-600 hover:bg-red-50 gap-3"
+                                onClick={() => {
+                                    setMobileMenuOpen(false);
+                                    signOut({ callbackUrl: '/' });
+                                }}
+                            >
+                                <LogOut className="w-5 h-5" />
+                                Sign Out
+                            </Button>
                         </div>
                     </div>
                 </div>
