@@ -82,7 +82,7 @@ export function Navigation() {
               </Link>
               <Link href="/review">
                 <button
-                  className="px-5 py-2.5 bg-slate-900 text-white text-sm font-medium rounded-xl hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/20"
+                  className="px-5 py-2.5 bg-accent-blue text-white text-sm font-bold rounded-xl hover:bg-blue-600 transition-all shadow-lg shadow-blue-500/20 hover:scale-[1.02] active:scale-[0.98]"
                 >
                   Get Started
                 </button>

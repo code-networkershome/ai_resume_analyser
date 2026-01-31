@@ -448,7 +448,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                             <Button 
                                 onClick={handleExportPDF}
                                 disabled={isExporting}
-                                className="h-14 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-widest px-8 shadow-xl shadow-slate-900/10 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+                                className="h-14 rounded-2xl bg-accent-blue hover:bg-blue-600 text-white font-black text-xs uppercase tracking-widest px-8 shadow-xl shadow-blue-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
                             >
                                 <Download className="mr-3 h-4 w-4" /> {isExporting ? 'Processing...' : 'Download PDF'}
                             </Button>
@@ -474,7 +474,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                             <TabsTrigger
                                 key={tab.value}
                                 value={tab.value}
-                                className="rounded-2xl data-[state=active]:bg-slate-900 data-[state=active]:text-white data-[state=active]:shadow-xl transition-all flex items-center gap-3 h-full px-8 font-black text-[13px] uppercase tracking-wider"
+                                className="rounded-2xl data-[state=active]:bg-accent-blue data-[state=active]:text-white data-[state=active]:shadow-xl transition-all flex items-center gap-3 h-full px-8 font-black text-[13px] uppercase tracking-wider"
                             >
                                 {tab.icon} <span className="hidden md:inline">{tab.label}</span>
                             </TabsTrigger>
@@ -675,7 +675,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                                                 </div>
                                                 <div className="h-3 bg-slate-100 rounded-full overflow-hidden p-0.5">
                                                     <div 
-                                                        className="h-full bg-slate-900 rounded-full transition-all duration-1000" 
+                                                        className="h-full bg-accent-blue rounded-full transition-all duration-1000" 
                                                         style={{ width: `${item.val}%` }} 
                                                     />
                                                 </div>
@@ -751,7 +751,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                                                     <Button 
                                                         onClick={() => handleApplyFix(`skill-${skill}`)}
                                                         disabled={isGenerating === `skill-${skill}`}
-                                                        className="h-12 px-8 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-[10px] uppercase tracking-widest shadow-lg shadow-slate-900/10 transition-all active:scale-[0.98] disabled:opacity-50"
+                                                        className="h-12 px-8 rounded-2xl bg-accent-blue hover:bg-blue-600 text-white font-black text-[10px] uppercase tracking-widest shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98] disabled:opacity-50"
                                                     >
                                                         {isGenerating === `skill-${skill}` ? "Generating..." : "Generate Fix"}
                                                     </Button>
@@ -808,7 +808,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                                     </div>
                                 </div>
 
-                                <div className="p-8 bg-slate-900 rounded-[2.5rem] text-white relative overflow-hidden group">
+                                <div className="p-8 bg-blue-600 rounded-[2.5rem] text-white relative overflow-hidden group">
                                     <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:scale-110 transition-transform duration-700">
                                         <TrendingUp className="h-32 w-32" />
                                     </div>
@@ -818,7 +818,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                                             <span className="text-[9px] font-black text-cyan-400 uppercase tracking-[0.2em]">Strategy Insight</span>
                                         </div>
                                         <h5 className="text-xl font-black tracking-tight">Industry-Standard Stack</h5>
-                                        <p className="text-slate-300 text-sm font-medium leading-relaxed">
+                                        <p className="text-blue-50 text-sm font-medium leading-relaxed">
                                             Incorporating these tools will place your resume in the top 5% of candidate compatibility for technical screenings.
                                         </p>
                                     </div>
@@ -910,7 +910,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                     <div className="space-y-8">
                         <div className="flex flex-col md:flex-row justify-between items-end gap-6">
                             <div className="space-y-4">
-                                <Badge className="bg-slate-900 text-white border-none rounded-xl px-4 py-1.5 font-black text-[10px] uppercase tracking-[0.2em]">Optimization Suite</Badge>
+                                <Badge className="bg-accent-blue text-white border-none rounded-xl px-4 py-1.5 font-black text-[10px] uppercase tracking-[0.2em]">Optimization Suite</Badge>
                                 <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">High-Impact <span className="gradient-text">Fixes</span></h2>
                                 <p className="text-slate-500 font-medium text-lg max-w-2xl leading-relaxed">
                                     AI-engineered enhancements designed to bypass legacy filters and capture executive attention.
@@ -930,7 +930,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                                     </div>
 
                                     <div className="hidden xl:flex items-center justify-center w-24 bg-white relative z-10 -mx-12">
-                                        <div className="h-16 w-16 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-2xl shadow-slate-900/20 group-hover/fix:scale-110 group-hover/fix:rotate-180 transition-all duration-700">
+                                        <div className="h-16 w-16 rounded-full bg-accent-blue text-white flex items-center justify-center shadow-2xl shadow-blue-500/20 group-hover/fix:scale-110 group-hover/fix:rotate-180 transition-all duration-700">
                                             <ArrowRight className="h-6 w-6" />
                                         </div>
                                     </div>
@@ -962,7 +962,7 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                                                     "h-14 px-10 rounded-[1.5rem] font-black text-xs uppercase tracking-widest transition-all shadow-xl active:scale-[0.98]",
                                                     appliedFixes.has(`bullet-${i}`) 
                                                         ? "bg-emerald-500 hover:bg-emerald-600 text-white shadow-emerald-500/20" 
-                                                        : "bg-slate-900 hover:bg-slate-800 text-white shadow-slate-900/20 hover:scale-[1.05]"
+                                                        : "bg-accent-blue hover:bg-blue-600 text-white shadow-blue-500/20 hover:scale-[1.05]"
                                                 )}
                                             >
                                                 {appliedFixes.has(`bullet-${i}`) ? (
