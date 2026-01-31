@@ -31,6 +31,24 @@ declare module 'api2pdf' {
       pdfUrl: string;
       pdfId: string;
     }>;
+    
+    chromeHtmlToPdf(html: string, options?: {
+      inline?: boolean;
+      fileName?: string;
+      orientation?: 'portrait' | 'landscape';
+      pageSize?: 'letter' | 'a4' | 'legal';
+      margins?: {
+        top?: string;
+        bottom?: string;
+        left?: string;
+        right?: string;
+      };
+    }): Promise<{
+      Success: boolean;
+      FileUrl?: string;
+      FileId?: string;
+      Error?: string;
+    }>;
   }
   
   export default Api2Pdf;
