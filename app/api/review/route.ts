@@ -202,8 +202,36 @@ export async function POST(req: NextRequest) {
                         logToDebug(`❌ EMAIL FAILED:`, result.error);
                     }
                 } catch (emailError: any) {
-                    logToDebug(`🛑 CRITICAL FAILURE in PDF/Email Flow:`, { message: emailError.message, stack: emailError.stack });
+                    logToDebug(`🛑 FAILURE in PDF/Email Flow:`, { message: emailError.message, stack: emailError.stack });
+                    // Don't fail the entire API call for email/PDF issues - send email without PDF
+                    try {
+                        logToDebug(`📧 SENDING EMAIL WITHOUT PDF to: ${userEmail}`);
+                        const result = await sendReportEmail({
+                            userEmail,
+                            userName,
+                            targetRole,
+                            experienceLevel,
+                            atsScore: universalAnalysis.scores.composite.value,
+                            summaryVerdict: universalAnalysis.verdict.summary || 'Your resume analysis is complete.',
+                            reportUrl,
+                            keyIssues: universalAnalysis.issues
+                                .filter((i: any) => i.severity === 'high-impact')
+                                .slice(0, 5)
+                                .map((i: any) => i.description) || [],
+                            topPriorities: universalAnalysis.roadmap?.slice(0, 5).map((r: any) => r.action) || [],
+                        });
+
+                        if (result.success) {
+                            logToDebug(`✨ EMAIL (NO PDF) SENT SUCCESSFULLY! ID: ${result.id}`);
+                        } else {
+                            logToDebug(`❌ EMAIL (NO PDF) FAILED:`, result.error);
+                        }
+                    } catch (fallbackError: any) {
+                        logToDebug(`🛑 COMPLETE EMAIL FAILURE:`, { message: fallbackError.message });
+                    }
                 }
+            } else {
+                logToDebug("⚠️ Skipping email - missing RESEND_API_KEY or user email");
             }
 
             // Log Audit - Success
