@@ -1,20 +1,19 @@
 import { logToDebug } from "./logger";
+import Api2Pdf from "api2pdf";
 import { UniversalResumeAnalysis } from "./types/universal-types";
 
-// Dynamic import to handle potential module loading issues
-let Api2Pdf: any = null;
-let a2p: any = null;
+// Initialize Api2Pdf with proper error handling
+let a2p: Api2Pdf | null = null;
 
 try {
-  Api2Pdf = require("api2pdf").default;
-  if (Api2Pdf && process.env.API2PDF_KEY) {
+  if (process.env.API2PDF_KEY) {
     a2p = new Api2Pdf(process.env.API2PDF_KEY);
     logToDebug("✅ Api2Pdf initialized successfully");
   } else {
     logToDebug("⚠️ Api2Pdf not available - missing API2PDF_KEY");
   }
 } catch (error: any) {
-  logToDebug("❌ Failed to load Api2Pdf:", error.message);
+  logToDebug("❌ Failed to initialize Api2Pdf:", error.message);
   logToDebug("⚠️ PDF generation will be skipped");
 }
 

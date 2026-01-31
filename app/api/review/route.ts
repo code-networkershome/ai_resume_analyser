@@ -173,7 +173,6 @@ export async function POST(req: NextRequest) {
             if (userEmail && process.env.RESEND_API_KEY) {
                 console.log(`[Review API] Sending report email to ${userEmail}...`);
 
-                // CRITICAL FIX: Await to ensure delivery in serverless environment
                 try {
                     logToDebug("🚀 STARTING PDF GENERATION with Api2Pdf...");
                     const pdfBuffer = await generateReportPDF(universalAnalysis, targetRole);
@@ -203,32 +202,7 @@ export async function POST(req: NextRequest) {
                     }
                 } catch (emailError: any) {
                     logToDebug(`🛑 FAILURE in PDF/Email Flow:`, { message: emailError.message, stack: emailError.stack });
-                    // Don't fail the entire API call for email/PDF issues - send email without PDF
-                    try {
-                        logToDebug(`📧 SENDING EMAIL WITHOUT PDF to: ${userEmail}`);
-                        const result = await sendReportEmail({
-                            userEmail,
-                            userName,
-                            targetRole,
-                            experienceLevel,
-                            atsScore: universalAnalysis.scores.composite.value,
-                            summaryVerdict: universalAnalysis.verdict.summary || 'Your resume analysis is complete.',
-                            reportUrl,
-                            keyIssues: universalAnalysis.issues
-                                .filter((i: any) => i.severity === 'high-impact')
-                                .slice(0, 5)
-                                .map((i: any) => i.description) || [],
-                            topPriorities: universalAnalysis.roadmap?.slice(0, 5).map((r: any) => r.action) || [],
-                        });
-
-                        if (result.success) {
-                            logToDebug(`✨ EMAIL (NO PDF) SENT SUCCESSFULLY! ID: ${result.id}`);
-                        } else {
-                            logToDebug(`❌ EMAIL (NO PDF) FAILED:`, result.error);
-                        }
-                    } catch (fallbackError: any) {
-                        logToDebug(`🛑 COMPLETE EMAIL FAILURE:`, { message: fallbackError.message });
-                    }
+                    throw new Error(`Failed to generate PDF or send email: ${emailError.message}`);
                 }
             } else {
                 logToDebug("⚠️ Skipping email - missing RESEND_API_KEY or user email");
