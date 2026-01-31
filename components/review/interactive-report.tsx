@@ -808,17 +808,17 @@ export function InteractiveReport({ review }: InteractiveReportProps) {
                                     </div>
                                 </div>
 
-                                <div className="p-8 bg-blue-600 rounded-[2.5rem] text-white relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:scale-110 transition-transform duration-700">
-                                        <TrendingUp className="h-32 w-32" />
+                                <div className="p-8 bg-white rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/50 relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:scale-110 transition-transform duration-700">
+                                        <TrendingUp className="h-32 w-32 text-accent-blue" />
                                     </div>
                                     <div className="relative z-10 space-y-3">
                                         <div className="flex items-center gap-2">
-                                            <div className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
-                                            <span className="text-[9px] font-black text-cyan-400 uppercase tracking-[0.2em]">Strategy Insight</span>
+                                            <div className="h-2 w-2 rounded-full bg-accent-blue animate-pulse" />
+                                            <span className="text-[9px] font-black text-accent-blue uppercase tracking-[0.2em]">Strategy Insight</span>
                                         </div>
-                                        <h5 className="text-xl font-black tracking-tight">Industry-Standard Stack</h5>
-                                        <p className="text-blue-50 text-sm font-medium leading-relaxed">
+                                        <h5 className="text-xl font-black text-slate-900 tracking-tight">Industry-Standard Stack</h5>
+                                        <p className="text-slate-500 text-sm font-medium leading-relaxed">
                                             Incorporating these tools will place your resume in the top 5% of candidate compatibility for technical screenings.
                                         </p>
                                     </div>
